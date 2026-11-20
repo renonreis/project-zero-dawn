@@ -9,7 +9,7 @@ Roteiro que o agente segue quando você pede um projeto novo ou traz um existent
 3. **Plano**: abordagem de entrega + tier (default Beta) + features em ordem, com o que fica de fora explícito → `docs/scope/scope.md`.
 4. **Stack** (`/architect`, stack mode): não há stack padrão; cada projeto decide, com recomendação e segunda opção. Crítica de outro modelo antes de aceitar.
 5. **Scaffold** com a ferramenta oficial da stack (`/develop`), depois **`/audit`** no projeto real → `AGENTS.md` com `## Git` em `autonomy: full`.
-6. **Fundações**: modelo de dados, design system (do Paper, quando houver UI), walking skeleton.
+6. **Fundações**: modelo de dados, design system (tokens no código, design dos componentes no Paper, quando houver UI), walking skeleton.
 7. **Loop por feature**: `/architect` → `/develop` → provas do tier → `/document` → `/sync` (merge + atualização do portfólio).
 8. **Deploy**: só com o seu ok, sempre.
 
