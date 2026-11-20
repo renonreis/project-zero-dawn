@@ -16,7 +16,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 2 | Skills fork and adaptations | Foundation | in-progress |
 | 3 | Installation and global rules | Foundation | in-progress |
 | 4 | Portfolio registry | Foundation | in-progress |
-| 5 | GitHub repository | Foundation | planned |
+| 5 | GitHub repository | Foundation | done |
 | 6 | Model routing per skill | Slice 1 | planned |
 | 7 | Pilot: design system in Paper | Slice 1 | planned |
 | 8 | Plugin or marketplace distribution | Deferred | planned |
@@ -49,11 +49,11 @@ One row per managed project, maintained by `/scope` and `/sync`.
 - [x] `docs/portfolio/registry.md`
 - [ ] Add the engineer's current projects
 
-### 5. GitHub repository
+### 5. GitHub repository · done
 Publish Zero Dawn to GitHub and open the phase 1 PR.
 **Done when:** the repo exists with the agreed visibility and phase 1 is merged.
 - [x] Engineer picks public or private (public)
-- [ ] Create repo, push, PR, merge
+- [x] Create repo, push, PR, merge (PR #1)
 
 ## Slice 1
 
