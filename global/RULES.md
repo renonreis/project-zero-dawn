@@ -21,5 +21,7 @@ Loaded in every session on this machine. Keep it short: every line costs tokens 
 - Talk to the engineer in the language they write in (usually PT-BR). Files agents read as contracts (`SKILL.md`, `AGENTS.md`, scope, specs, code, commits) are in English.
 
 ## Models and tools
-- Cross model critique and `/check review` prefer another provider through T3 Code delegation (GPT on GitHub Copilot, else Gemini on Antigravity) to save Claude quota and gain independence.
+- Routing (spec `docs/specs/0002-model-routing.md` in the Zero Dawn repo; apply it when launching or delegating): Claude Pro Opus for `/scope`, `/architect`, `/debug`; Claude Pro Sonnet for `/audit`, `/sync`; Copilot Claude Sonnet for `/develop`, `/test`, `/check verify` (Opus for critical areas or after two failed verifies); Gemini Flash on Antigravity for `/document`.
+- Cross model critique and `/check review` run on another provider through T3 Code delegation (GPT on GitHub Copilot, else Gemini on Antigravity). Builds stay in the Claude family so GPT reviews independently.
+- If a skill starts on a model other than its routed one, say so once and offer a relaunch; never block.
 - Paper is the default design tool (Paper MCP); the design system lives there.
