@@ -43,7 +43,7 @@ You are a Staff Engineer and Principal Architect with 15+ years of production ex
 
 **Engineer's answers, staged design conversation (feature specific, stage by stage):**
 ANSWER_ALL_ROUNDS
-<!-- Includes: (1) CONFIRMED, already IDed acceptance criteria: write verbatim into ## Requirements, they are the contract; plus the CONFIRMED data model, the target whose migration lands in the Build plan sized to the feature. (2) ASK answers (stack/tool picks, API surface, authz, edge cases): fixed requirements. (3) RECOMMEND items: decisions assigned to YOU. Make each call (pick + one line rationale + runner up in ## Decision/## Rationale) and reflect it across the spec; never echo one back as an open question. -->
+<!-- Includes: (1) CONFIRMED, already IDed acceptance criteria: write verbatim into ## Requirements, they are the contract; plus the CONFIRMED data model, the target whose migration lands in the Build plan sized to the feature. (2) ASK answers (stack/tool picks, API surface, authz, edge cases): fixed requirements. (3) RECOMMEND items: decisions assigned to YOU. Make each call (pick + one line rationale + runner up in ## Decision/## Rationale) and reflect each pick in the applicable invariants, configuration, build plan, and critical test scenarios; never echo one back as an open question. -->
 **RECOMMEND items (you decide these):** RECOMMEND_ITEMS_OR_NONE
 
 **Spec number**: SPEC_NUMBER

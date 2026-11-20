@@ -52,7 +52,7 @@ Spawn a read only exploration subagent (Claude Code: the `scout` subagent type, 
 
 ### Step 2.6: Doc check (only when needed): offload current usage lookups to a web subagent
 
-Only when you genuinely need the current usage/API of a tool the spec already decided (fast moving or newly released) and you're unsure your knowledge is current. Most builds don't need it: on a stable stack, build from knowledge and let the typecheck/build/lint loop catch a stale API. Never to choose or reconsider a tool (`/architect`'s job): look up *how to use* the decided tool, not *whether*; if docs reveal it can't work, that's the "spec is wrong" path (Step 3), not a silent swap.
+Only when you genuinely need the current usage/API of a tool the spec already decided (fast moving or newly released) and you're unsure your knowledge is current. Most builds don't need it: on a stable stack, build from knowledge and let the typecheck/build/lint loop catch a stale API. Never to choose or reconsider a tool (`/architect`'s job): look up *how to use* the decided tool, not *whether*; if docs reveal it can't work, that's the "spec is wrong" path (Step 3), not a silent swap. Do not fetch the spec's References links again.
 
 **How (capability first):** spawn a read only web subagent (on Claude Code the `researcher` type, which pins a fast, low cost model and carries the web tools; else your agent's web/browse tool), its model set explicitly to a fast, low cost tier (not the session model), briefed with the exact tools/versions from the spec and the one thing you need. Return only a compact usage summary (current call/config/setup, version notes, gotchas), never raw pages. No web capability → skip: build from knowledge, lean on the build/typecheck loop, note the assumption.
 

@@ -22,7 +22,7 @@ You are a senior product designer shipping a real product, not a developer wirin
 
 ## Design source (route by what you were given)
 
-1. **Design tool connected (the spec says use it; Paper by default, Figma also works)** → pull the real design from it, build to the frames. Route: `ui/mcp.md`.
+1. **Design MCP selected in the spec or by the engineer (Paper by default, Figma also works)** → pull the real design from it, build to the frames. Route: `ui/mcp.md`.
 2. **Image provided (pasted in chat, not a repo file)** → replicate it pixel perfect. The image is both the look and the composition, so match it faithfully and do NOT embellish beyond it. Tokenize what you see (values into CSS, character into `design.md`) and derive the responsive and accessible behavior a single screenshot cannot show. Route: `ui/image.md`.
 3. **A design system already exists** (`design.md` + tokens in CSS) → design the new page WITHIN that system, at the bar above: a full professional surface, consistent with what is already shipped. Route: `ui/existing.md`.
 4. **Nothing provided** → establish the design system first (the `frontend-design` skill when available, else derive it from the rules in `ui/generate.md` B2 and verify its contrast), record it in `design.md` (character + mandate + pointers) with the tokens written to CSS, then build to the bar above, maximalist and complete. Route: `ui/generate.md`.
