@@ -21,9 +21,9 @@ Gates, then acts: no upfront question rounds like `/architect`. Read the decisio
 ## Artifact ownership
 
 - Writes app code (plus CSS/tokens for UI).
-- Scope (`docs/scope/`): only the Step 4 touches (feature status → `in-progress`, milestone sub boxes, `Build it` box, code pointer). Marks a feature `done` only at the `Prototype` workflow tier (build plus its own self check; the engineer opted out of separate verification); an `Assumed` spec does not block this, it stays flagged as owing ratification. At `Alpha`/`Beta`/`GA` it leaves the feature `in-progress` for `/check verify` and `/test` to close, and never ticks `Verify it` or `Test it`. Never creates files in `docs/scope/` (scopes only; analysis/research is `/architect`'s, in the spec's `rationale.md`).
-- Never writes spec content or deliberates a decision (flags the need, defers to `/architect`); never restructures root `AGENTS.md` (that's `/audit`); new area conventions go via `/sync` afterwards. **One narrow exception:** on `Build now, record it as an assumed spec` (Step 0), `/develop` may *create* a spec, but only in `Status: Assumed`, and only the assumption record fields (owed decision, assumption built on, authorized by, code area, requirements seeds). It never writes rationale and never advances an `Assumed` spec past that state; `/architect` owns clearing it. This is the only spec `/develop` creates.
-- One spec touch on an existing spec: the `**Status**:` line (umbrella decision → the `index.md`'s, never a child's), plus filling the feature's spec pointer line. Build start: `Proposed` → `In Progress`; build lands (feature → `done`): `In Progress` → `Accepted` (a spec is not `Accepted` until its feature ships). Never edit spec content, only that line, surgically: read it again right before writing; unexpected state (already `Accepted`, `Superseded`) → flag, don't clobber. **Never move a spec out of `Assumed`** (that is ratification, `/architect`'s job): an `Assumed` spec stays `Assumed` through the build even while the feature is `in-progress`, so it can never reach `Accepted` until `/architect` ratifies it. The feature itself can still be marked `done` (the engineer's call); the `Assumed` spec stays flagged as owing ratification, it does not block `done`.
+- Scope (`docs/scope/`): only the Step 4 touches (feature status → `in-progress`, milestone sub boxes, `Build it` box, code pointer). Marks a feature `done` only at the `Prototype` tier; at `Alpha`/`Beta`/`GA` it leaves it `in-progress` for `/check verify` and `/test`, and never ticks `Verify it` or `Test it`. Never creates files in `docs/scope/`.
+- Never writes spec content or deliberates a decision (flags the need, defers to `/architect`); never restructures root `AGENTS.md` (`/audit`); new area conventions go via `/sync`. **One exception:** the Step 0 `Assumed` spec, the only spec `/develop` creates: assumption record fields only, no rationale, never advanced past `Assumed`.
+- One spec touch on an existing spec: the `**Status**:` line (umbrella decision → the `index.md`'s, never a child's), plus filling the feature's spec pointer line. Build start: `Proposed` → `In Progress`; build lands (feature → `done`): `In Progress` → `Accepted` (a spec is not `Accepted` until its feature ships). Never edit spec content, only that line, surgically: read it again right before writing; unexpected state (already `Accepted`, `Superseded`) → flag, don't clobber. **Never move a spec out of `Assumed`** (ratification is `/architect`'s job), so it never reaches `Accepted` until ratified. It never blocks the feature's `done`.
 - Artifact base: `docs/` by default, `.workflow/` if `docs/` is a published docs site. Read from whichever exists (paths here assume `docs/`).
 - Shared scope: read it again right before ticking, edit only the specific checkbox, status, or pointer line (never rewrite the file); feature not as expected (already `done`, reworked) → flag, don't overwrite.
 
@@ -31,7 +31,7 @@ Gates, then acts: no upfront question rounds like `/architect`. Read the decisio
 
 ## Portability (any OS, any agent)
 
-Any Agent Skills client, macOS/Linux/Windows. Detection snippets are POSIX reference; use your agent's own cross platform file tools. Builds inline on the main thread (Step 3); the only subagents are a read only `scout` that explores code (Step 2.5) and a read only `researcher` for a doc check (Step 2.6, degrading to building from knowledge without web capability), both on the cheapest model. Bundled guides (`ui-guide.md`, `logical-guide.md`, `checklist.md`) and the build flow after the gate (`flow/build.md`) are paths relative to this skill's folder; the main thread reads them. No interactive question picker → ask the prompts as plain text with the same options.
+Any Agent Skills client, macOS/Linux/Windows. Detection snippets are POSIX reference; use your agent's own cross platform file tools. Builds inline on the main thread (Step 3); the only subagents are a read only `scout` that explores code (Step 2.5) and a read only `researcher` for a doc check (Step 2.6, degrading to building from knowledge without web capability), both on the cheapest model. Reference file paths are relative to this skill's folder. No interactive question picker → ask the prompts as plain text with the same options.
 
 ## Execution
 
@@ -71,7 +71,7 @@ If any source is unnamed, stop and route to the gate (`/architect`, or record an
 
 **What "local implementation detail" actually means (the narrow exception):** ONLY a choice among options the spec's named sources already permit, a loop style, a variable name, which helper to call. The moment a choice **determines a value's source, or a behavior an acceptance criterion constrains**, it is load bearing by definition, however small it looks. Deriving "the user's today from the timezone on their last read row" is not a local detail: it picks the source of a value an AC constrains, so it is owed. NOT owed for genuine pure implementation: a small bug fix, a component matching an existing `design.md`, wiring pieces whose sources the spec already names, a copy tweak, anything an existing spec/`design.md`/`AGENTS.md` fully governs.
 
-Don't hardcode to page names or to any one example (timezone is an illustration of the pattern, not a rule); apply the input coverage test to whatever was asked. False negatives are the failure mode, building a real decision without noticing: when a required value's source is unnamed, or you are unsure, treat as owed and ask (panel below).
+Apply the test to whatever was asked, not to these examples. False negatives are the failure mode: source unnamed or you are unsure → treat as owed and ask (panel below).
 
 Read only what this feature needs, never the whole `docs/` tree: its one scope file and its one governing spec (single file, or umbrella `index.md` plus the one child speccing this sub task). No other features' rows, scope files, workspaces, or unrelated specs.
 
@@ -117,7 +117,7 @@ This decision was recorded by /develop, not deliberated. Run `/architect <featur
 to deliberate and ratify it. Until then it stays flagged as an owed decision; it does not block marking the feature `done`.
 ```
 
-Point the feature's scope `spec` line at this file. The assumption is now durable: it survives `/clear`, teammates read it, and a later `/develop` builds against it instead of guessing again. The `Assumed` spec stays flagged as owing ratification; it does not block marking the feature `done` (see `flow/build.md`, Step 4).
+Point the feature's scope `spec` line at this file.
 
 On `Architect it first`, end with:
 
@@ -131,7 +131,7 @@ No decision owed (pure implementation) → skip the question, proceed.
 
 ### Build flow (Steps 1-4)
 
-Once the gate clears (no decision owed, or the engineer chose `No, not needed` / `Build now, record it as an assumed spec`), read `flow/build.md` and follow its Steps 1-4: classify the track, load the decision and conventions, explore, optional doc check, build, then update the scope and report. Do not read `flow/build.md` when the gate ends the run (`Architect it first`, no build).
+Once the gate clears (no decision owed, or the engineer chose `No, not needed` / `Build now, record it as an assumed spec`), read `flow/build.md` and follow its Steps 1-4. Skip it when the gate ends the run.
 
 ---
 
