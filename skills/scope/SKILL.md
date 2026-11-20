@@ -14,13 +14,13 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 Turns an idea into an ordered, coarse, living plan and keeps it honest as the product ships. Answers what to build, in what order, how heavy, which need a decision first, not how to build one thing (that is `/architect` and `/develop`).
 
-Scope shape, coarse and small: a slim At a glance table (`# · Feature · Phase · Status`) + feature sections grouped by phase (see `scope-template.md`). Each section: heading `### N. Name` with short tags only when they matter (`needs a decision`, an approach override, a workflow tier override like `· GA`), a 1 to 2 line intent, one `Done when:` line (acceptance criteria seeds, the WHAT), checkbox steps.
+Scope shape, coarse and small (exact format in `scope-template.md`): an At a glance table + feature sections grouped by phase, each with a 1 to 2 line intent, one `Done when:` line (acceptance criteria seeds, the WHAT), checkbox steps.
 
 Feature shape lifecycle: not yet designed → one box, its entry command. On spec capture, `/architect` fills the built ready shape: `Design it (spec)` ticked, spec linked, `Build it: /develop <feature>` with 2 to 5 milestone sub items rolled up from the spec's `## Build plan`, then `Verify it: /check verify <feature>` and `Test it: /test <feature>`. Atomic build tasks stay in the spec's `## Build plan`, never here; every box is a command or tracked milestone. Status: in the table and beside the heading; spec and code pointers once they exist.
 
 One command, inferred intent (`/scope [what]`, never a subcommand):
 - **plan** (default): no scope yet + a product sized idea, or asking for the next slice. Full pass: ask → decompose into coarse feature sections → order + phase → write.
-- **replan**: scope exists + no argument. Opens with a short where things stand readout (git branch and ahead/behind the remote, feature counts by status, and each in-progress feature's resume point) so a bare `/scope` doubles as the "where was I, what is safe to pick up" orientation, then reconciles what shipped, surfaces plan vs reality drift (code or specs with no scope row), enrolls needs surfaced during the build, reorders, and queues the next slice. The normal living rhythm, not rare: run bare `/scope` again.
+- **replan**: scope exists + no argument. Opens with a short where things stand readout (git branch and ahead/behind the remote, feature counts by status, and each in-progress feature's resume point) so a bare `/scope` doubles as the "where was I, what is safe to pick up" orientation, then reconciles what shipped, surfaces plan vs reality drift (code or specs with no scope row), enrolls needs surfaced during the build, reorders, and queues the next slice.
 - **add**: scope exists + argument names a single feature. Enroll one coarse row (intent + order + tier + Needs spec) without planning again: `/scope <a feature>`.
 
 ## Asks vs acts
@@ -54,7 +54,7 @@ Workflow tier (one rigor dial per feature, `Prototype` · `Alpha` · `Beta` · `
 - **After `/develop`** (the verification tail): `Prototype` = nothing (rely on `/develop`'s own build time self check); `Alpha` = `/check verify`; `Beta` = `/check verify` + `/test`; `GA` = adds a fresh model `/check review` + `/document`.
 - **What closes `done`** (the last required stage marks it): `Prototype` → `/develop` (build + self check); `Alpha` → `/check verify`; `Beta`/`GA` → `/test`. An `Assumed` spec never blocks `done`; it stays flagged as owing ratification (`/architect`) at every tier.
 
-`/scope` recommends the project default from the risk and size of the feature mix (Step 5b), the same signals `/architect` and `/develop` read; `/develop` reads the effective tier (feature override, else project default, else inferred) to scale the next steps it recommends, so a `Prototype` project is not told to run verify and a `Alpha` project is not told to run a full review chain.
+`/scope` recommends the project default from the risk and size of the feature mix (Step 5b); `/develop` reads the effective tier (feature override, else project default, else inferred) to scale the next steps it recommends.
 
 Artifact base: `docs/` by default; if `docs/` is a published docs site (`docusaurus.config.*`, `.vitepress/`, `mkdocs.yml`, Astro Starlight, or Nextra detected), use `.workflow/` (`.workflow/scope/…`). Always follow whichever base already exists (paths here assume `docs/`).
 
@@ -70,27 +70,10 @@ Any Agent Skills client on macOS, Linux, Windows. Detection snippets are POSIX r
 
 ## Execution
 
-### Step 0: Infer intent & idea check
+### Step 0: Infer intent, then load one mode file
 
-No subcommand. First check whether a scope exists under `docs/scope/` (or `.workflow/scope/` if that is the artifact base), then infer:
-- Scope exists + no argument (or running again, described as "reconcile / what's next") → replan behavior (`modes/replan.md`).
-- Scope exists + argument names a single feature → add behavior (`modes/add.md`).
-- No scope yet + a product sized idea, or scoping the next slice (including brownfield) → plan behavior, below.
+Check whether a scope exists under the artifact base, infer the behavior (see "One command, inferred intent"; "reconcile / what's next" also means replan), then read exactly one mode file and follow it: `modes/plan.md`, `modes/replan.md`, or `modes/add.md`. Read another only if the inferred behavior changes.
 
-Ambiguous (a new slice vs a single feature): infer the most likely reading from scope, say which behavior you chose in the report; truly unclear → one line clarifying question.
+Ambiguous (a new slice vs a single feature): pick the most likely reading from the scope and name it in the report; truly unclear → one line clarifying question.
 
-Plan behavior, no idea given (no argument, no scope to extend): stop and ask before anything else:
-
-"What are you building? Describe the product or the slice of it you want to plan (one or two sentences about what it does and who it's for)."
-
-Wait for the answer; use it as the product idea.
-
-### Step 1: Load the inferred behavior
-
-After Step 0 infers the behavior, read exactly one mode file and follow it:
-
-- `modes/plan.md` for plan behavior (new scope, product sized idea, or next slice planning).
-- `modes/replan.md` for replan behavior (scope exists and no argument).
-- `modes/add.md` for add behavior (scope exists and the argument names one feature).
-
-Do not read the other mode files unless the inferred behavior changes. All common rules above still apply, and `scope-template.md` remains the format reference for any write/report.
+Plan with no idea given (no argument, no scope to extend): stop and ask "What are you building? Describe the product or the slice of it you want to plan (one or two sentences about what it does and who it's for)." Use the answer as the product idea.

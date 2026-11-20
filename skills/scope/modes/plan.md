@@ -10,7 +10,7 @@ Read exactly one route file before continuing to Step 2:
 - `modes/plan-brownfield.md` when source files or a manifest show an existing codebase or an existing scope is being extended.
 - `modes/plan-greenfield.md` when there is no source code and no manifest yet.
 
-Do not read the other plan route files unless the classification changes. After the selected route has established the scope/workspace context, continue with Step 2 below.
+Read another only if the classification changes.
 
 ### Step 2: Ask (generated question walk, as decision panels)
 
@@ -35,7 +35,7 @@ Decides how every feature is sliced and sequenced. No fixed procedure; reason ab
 
 Reason out the pick, never hardcode it or its mechanics: default for a proper production build is Tracer Bullet; shift only when the goal calls for it (fast validation of one core loop → Skateboard; the experience/funnel is the product → Journey; a quick clickable prototype → Facade, said plainly to be prototype grade). One line why in terms of this product. Never name a tool; the approach shapes how, not with what.
 
-**Once the approach is chosen, read its persona file and adopt that engineer's role for decomposition** (`approaches/tracer-bullet.md`, `approaches/skateboard.md`, `approaches/facade.md`, or `approaches/journey.md`). Read only the chosen one. Each persona defines how that engineer slices, what the first slice or deliverable is, what is real vs deferred, and the sequencing, with a worked example. All slicing and sequencing in Step 4 and Step 5 follows that persona. A per feature override (Step 5) reads that feature's chosen persona and applies it to that feature only.
+**Once the approach is chosen, read its persona file and adopt that engineer's role for decomposition** (`approaches/tracer-bullet.md`, `approaches/skateboard.md`, `approaches/facade.md`, or `approaches/journey.md`). Read only the chosen one. All slicing and sequencing in Step 4 and Step 5 follows that persona. A per feature override (Step 5) reads that feature's chosen persona and applies it to that feature only.
 
 Record it (the propagation source) in the scope header: `Build approach: <name> (<one-line principle>)`. A project wide convention: `/audit` and `/sync` persist it into root `AGENTS.md`; `/architect`, `/develop`, `/check verify` read and honor it. It also sets each feature's Phase (its slice / journey), shown in the At a glance table and as section grouping.
 
@@ -60,7 +60,7 @@ From the answers, produce the feature list: foundations first (Step 4), then sli
 - **Needs spec?**: the invent test: would building it require a decision the engineer hasn't made? Yes for a provider/library choice, a data model, a cross cutting pattern, the design system, a whole page/screen with no spec yet, or behavior that is not trivial (search, filtering, recommendations). No only for genuinely pure implementation an existing `design.md`/spec/convention covers. Unsure → yes; an unflagged decision is the expensive miss. `GA`/`Beta` tier → almost always yes.
 - One decision per spec: multiple distinct decisions in one feature → one `Needs spec: yes` item each, never one lumped "strategy" spec. Several sharing one broad decision that then splits → an umbrella that dependents reference; never mark a dependent `no` when it carries its own decision.
 
-No build task breakdown here. A not yet designed feature gets exactly one checkbox, its entry command: `/architect <feature>` when it `needs a decision`, else `/develop <feature>` (the coding standards and tooling foundation's first box is `/audit`, never `/develop`). Never enumerate UI / data model / API / test sub tasks; `/architect` fills the built ready shape on spec capture (see What this skill does; atomic tasks stay in the spec). The next step is then always the first unticked box, always a command or tracked milestone (no separate `Next:` line). See the lifecycle table in `scope-template.md`.
+No build task breakdown here: a not yet designed feature gets exactly one checkbox, its entry command (per `scope-template.md`; the coding standards and tooling foundation starts with `/audit`). Never enumerate UI / data model / API / test sub tasks, and no separate `Next:` line.
 
 Analysis/inventory is not a scope row: cataloguing duplication, listing call sites, auditing current state is decision support research living with the spec (`/architect` puts it in the spec's `rationale.md`). Never plan a row or step that writes a `.md` into `docs/scope/`.
 
@@ -78,11 +78,9 @@ Depth governs only the stages **after** `/develop` (verify, test, review, docume
   - `Beta`: "After `/develop`, `/check verify` then `/test`. No fresh model review by default. Best for most real products."
   - `GA`: "After `/develop`, `/check verify`, `/test`, a fresh model `/check review`, then `/document`; and most features are treated as needing a spec. Best for high risk, payments, auth, compliance, regulated, or team projects."
 
-The picker appends a free text Other automatically; in a plain text fallback offer the same four. Recommend by signal: throwaway prototype, experiment, or a personal one off → `Prototype`; a low risk product or internal tool you still want proven → `Alpha`; a normal production product → `Beta`; payments, auth, PII, compliance, regulated, or a team codebase → `GA`.
+Recommend by signal: throwaway prototype, experiment, or a personal one off → `Prototype`; a low risk product or internal tool you still want proven → `Alpha`; a normal production product → `Beta`; payments, auth, PII, compliance, regulated, or a team codebase → `GA`.
 
-Each tier also sets what `done` means (see `scope-template.md`); a feature built on an `Assumed` spec can still be `done`; the `Assumed` spec stays flagged as owing ratification until `/architect` ratifies it.
-
-Record the pick as the project default in the scope header `**Workflow:**` line (see `scope-template.md`). This default is what `/develop` reads (via the effective tier) to scale the next steps it recommends after a build.
+Record the pick as the project default in the scope header `**Workflow:**` line (see `scope-template.md`).
 
 ### Step 6: Write the scope (single file or epic split)
 
@@ -117,4 +115,4 @@ Sources plus web verified links: as Sources only, then verify the links with a r
 
 ### Step 7: Report and hand off
 
-Print the completion report using the `## /scope complete` block in `scope-template.md`, filled with this run's specifics. `/scope` does not run `/architect` or `/develop` for you; it hands you the ordered, coarse, weighted list to walk feature by feature (architect the `Needs spec: yes` ones, then build).
+Print the completion report using the `## /scope complete` block in `scope-template.md`, filled with this run's specifics. Do not run `/architect` or `/develop` yourself.
