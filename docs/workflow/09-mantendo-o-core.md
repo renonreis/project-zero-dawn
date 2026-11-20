@@ -35,6 +35,7 @@ git diff 42d85b8 -- skills agents
 | A6 | Pergunta de visibilidade do repo e registro no portfólio | `scope/modes/plan-greenfield.md`, `sync/SKILL.md` |
 | A7 | `/sync` faz merge sob `autonomy: full` com os checks do tier verdes | `sync/SKILL.md` |
 | A8 | Monorepo de produto único (ex.: DS + Storybook) usa um scope só | `scope/modes/plan-monorepo.md`, `scope/scope-template.md` |
+| A9 | Poda dos hot paths abaixo de 90% do orçamento: regras repetidas viram ponteiro, justificativas saem. Ao portar do upstream, não reintroduza o texto cortado | `scope/*`, `develop/SKILL.md`, `develop/flow/build.md`, `develop/ui-guide.md`, `architect/SKILL.md`, `architect/agent-prompt.md`, `architect/internal/*`, `audit/SKILL.md` |
 
 Toda nova divergência entra nesta tabela.
 
