@@ -17,7 +17,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 3 | Installation and global rules | Foundation | done |
 | 4 | Portfolio registry | Foundation | done |
 | 5 | GitHub repository | Foundation | done |
-| 6 | Model routing per skill | Slice 1 | planned |
+| 6 | Model routing per skill | Slice 1 | done |
 | 7 | Pilot: design system in Paper | Slice 1 | in-progress |
 | 8 | Plugin or marketplace distribution | Deferred | planned |
 | 9 | GAIA persona and agent naming | Slice 1 | in-progress |
@@ -57,11 +57,13 @@ Publish Zero Dawn to GitHub and open the phase 1 PR.
 
 ## Slice 1
 
-### 6. Model routing per skill · needs a decision
-Assign a provider and model per skill and subagent to balance quality and quota (draft in `docs/workflow/06-modelos.md`).
+### 6. Model routing per skill · done
+Assign a provider and model per skill and subagent to balance quality and quota (`docs/workflow/06-modelos.md`).
 **Done when:** a spec records the routing and skills or harness settings apply it.
-- [ ] Run "three reviewers, one feature" on the pilot
-- [ ] Decide routing: `/architect model routing`
+- [x] Reviewer evidence: five GPT 6.2 Sol cross checks, then this spec's own cross check on Gemini 3.8 Flash; Copilot dropped (quota), so the three reviewer experiment is replaced by one Gemini vs GPT OSS comparison
+- [x] Decide routing: spec 0002 (Claude Pro writes, Antigravity reviews and drafts)
+- [x] Apply: `global/RULES.md`, reviewer order in `check` and `architect` (A2, A3), `docs/workflow/06-modelos.md`
+- [ ] Compare Gemini 3.8 Flash and GPT OSS 120B once on the next pilot `/check review`
 
 ### 7. Pilot: design system in Paper · in-progress
 First real project through the workflow (brownfield), proving the loop end to end. Tokens live in the DS code; Paper is the source of component design (see `docs/workflow/07-design-system-paper.md`).
