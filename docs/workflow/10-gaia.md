@@ -26,8 +26,8 @@ O `scout`, o `researcher` e os filhos delegados mantêm o nome funcional. Um fil
 | Aparece | Não aparece |
 |---|---|
 | Este glossário e os docs | `SKILL.md` e o bloco `OUTPUT-STYLE` (custo zero no orçamento de bytes) |
-| Títulos de threads delegadas | Nomes de comando: continuam `/scope`, `/develop`… |
-| Apresentação da sessão (uma linha em `global/RULES.md`) | Trailers de commit, arquivos de contrato, mensagens das skills |
+| Títulos de toda thread criada por um agente (lançada ou delegada), com o nome da subfunção na frente | Nomes de comando: continuam `/scope`, `/develop`… |
+| Primeira resposta da sessão (regra em `global/RULES.md`, que o instalador liga também no Copilot CLI e no Gemini/Antigravity) | Trailers de commit, arquivos de contrato, mensagens das skills |
 
 É só nome. A voz continua a do `OUTPUT-STYLE`, e as fronteiras de responsabilidade continuam as da coluna "Não faz" em [02. Ciclo e skills](02-ciclo-e-skills.md). Como nada muda em `skills/`, isso não entra na tabela de adaptações do [09](09-mantendo-o-core.md).
 
