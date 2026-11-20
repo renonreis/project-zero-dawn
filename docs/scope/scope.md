@@ -18,7 +18,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 4 | Portfolio registry | Foundation | in-progress |
 | 5 | GitHub repository | Foundation | done |
 | 6 | Model routing per skill | Slice 1 | planned |
-| 7 | Pilot: design system in Paper | Slice 1 | planned |
+| 7 | Pilot: design system in Paper | Slice 1 | in-progress |
 | 8 | Plugin or marketplace distribution | Deferred | planned |
 | 9 | GAIA persona and agent naming | Deferred | planned |
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
@@ -63,11 +63,13 @@ Assign a provider and model per skill and subagent to balance quality and quota 
 - [ ] Run "three reviewers, one feature" on the pilot
 - [ ] Decide routing: `/architect model routing`
 
-### 7. Pilot: design system in Paper
-First real project through the workflow (brownfield), proving the loop end to end.
-**Done when:** the design system has AGENTS.md, a scope, a UI foundation spec sourced from Paper, and one shipped slice.
+### 7. Pilot: design system in Paper · in-progress
+First real project through the workflow (brownfield), proving the loop end to end. Tokens live in the DS code; Paper is the source of component design (see `docs/workflow/07-design-system-paper.md`).
+**Done when:** the design system has AGENTS.md, a scope, a UI foundation spec (token contract from the code, parity with Paper), and one shipped slice.
 - [x] Locate the Paper file and code repo (Paper file in registry; repo renonreis/triquetra-design-system)
-- [ ] `/audit` then `/scope` in the design system project
+- [x] `/audit` then `/scope` in the design system project (triquetra-design-system#41)
+- [ ] UI foundation spec in the design system project: `/architect UI foundation`
+- [ ] Ship one slice through `/develop`, `/check verify`, `/test`
 
 ## Deferred
 
