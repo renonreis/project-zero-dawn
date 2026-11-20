@@ -29,7 +29,7 @@ git diff 42d85b8 -- skills agents
 | # | Adaptação | Arquivos |
 |---|---|---|
 | A1 | Conversa no idioma do engenheiro, arquivos em inglês (bloco OUTPUT-STYLE, igual em todas) | `skills/*/SKILL.md` |
-| A2 | `/check review` tenta primeiro outro provedor via delegação do T3 (GPT/Copilot, Gemini/Antigravity) | `check/modes/review.md` |
+| A2 | `/check review` tenta primeiro outro provedor via delegação do T3 (Gemini no Antigravity, depois GPT OSS; spec 0002) | `check/modes/review.md` |
 | A3 | Crítica de spec do `/architect` em outro provedor | `architect/internal/after-subagent.md` |
 | A4 | Paper como ferramenta de design padrão; regras de leitura de valores exatos; tokens podem vir do código (`## Design sources`) | `develop/ui-guide.md`, `develop/ui/mcp.md`, `architect/internal/design-conversation.md` |
 | A5 | Configuração `autonomy: confirm \| full` no `## Git`; deploy sempre confirma | `develop/flow/git.md`, `document/SKILL.md`, `audit/modes/greenfield.md` |
