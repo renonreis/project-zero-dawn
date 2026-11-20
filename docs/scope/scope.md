@@ -1,0 +1,84 @@
+# Scope: Project Zero Dawn
+
+The engineer's core agentic engineering workflow: method docs, the nine workflow skills, global agent rules, and the registry of every project it manages.
+
+**Build approach:** Tracer Bullet (prove the whole loop on one real project, the design system, before polishing any part).
+**Workflow:** Beta (after develop: check verify, then test). Skill edits are verified with `npm run check` and a real run on the pilot project.
+**Repository:** visibility pending (see feature 5).
+
+_These are recommendations, not requirements. You decide when a feature is `done`._
+
+## At a glance
+
+| # | Feature | Phase | Status |
+|---|---------|-------|--------|
+| 1 | Workflow method docs | Foundation | in-progress |
+| 2 | Skills fork and adaptations | Foundation | in-progress |
+| 3 | Installation and global rules | Foundation | in-progress |
+| 4 | Portfolio registry | Foundation | in-progress |
+| 5 | GitHub repository | Foundation | planned |
+| 6 | Model routing per skill | Slice 1 | planned |
+| 7 | Pilot: design system in Paper | Slice 1 | planned |
+| 8 | Plugin or marketplace distribution | Deferred | planned |
+| 9 | GAIA persona and agent naming | Deferred | planned |
+| 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
+
+## Foundations
+
+### 1. Workflow method docs · in-progress
+PT-BR docs that explain the method, adapted from the reference guide.
+**Done when:** the engineer reviewed `docs/workflow/` and it matches how they want to work.
+- [x] Write docs 01 to 09: spec 0001
+- [ ] Engineer review and corrections
+
+### 2. Skills fork and adaptations · in-progress
+Nine skills forked from jsmastery-pro/skills with surgical Zero Dawn adaptations (A1 to A7).
+**Done when:** `npm run check` passes and each adapted path ran once on a real project.
+- [x] Vendor upstream verbatim, then adapt: spec 0001
+- [ ] Exercise adapted paths on the pilot (cross provider review, Paper source, autonomy, registry)
+
+### 3. Installation and global rules · in-progress
+Symlink install into `~/.claude` and `~/.agents`, plus `global/RULES.md` imported in every session.
+**Done when:** a fresh session in another project lists the nine skills and follows the global rules.
+- [x] `scripts/install.sh` with uninstall
+- [x] Confirm in a new session outside this repo
+
+### 4. Portfolio registry · in-progress
+One row per managed project, maintained by `/scope` and `/sync`.
+**Done when:** every active project has a row with repo, status, and tier.
+- [x] `docs/portfolio/registry.md`
+- [ ] Add the engineer's current projects
+
+### 5. GitHub repository
+Publish Zero Dawn to GitHub and open the phase 1 PR.
+**Done when:** the repo exists with the agreed visibility and phase 1 is merged.
+- [ ] Engineer picks public or private
+- [ ] Create repo, push, PR, merge
+
+## Slice 1
+
+### 6. Model routing per skill · needs a decision
+Assign a provider and model per skill and subagent to balance quality and quota (draft in `docs/workflow/06-modelos.md`).
+**Done when:** a spec records the routing and skills or harness settings apply it.
+- [ ] Run "three reviewers, one feature" on the pilot
+- [ ] Decide routing: `/architect model routing`
+
+### 7. Pilot: design system in Paper
+First real project through the workflow (brownfield), proving the loop end to end.
+**Done when:** the design system has AGENTS.md, a scope, a UI foundation spec sourced from Paper, and one shipped slice.
+- [ ] Locate the Paper file and decide whether a code repo exists or will exist
+- [ ] `/audit` then `/scope` in the design system project
+
+## Deferred
+
+### 8. Plugin or marketplace distribution
+Package skills as a Claude Code plugin for versioned installs on other machines. Evaluate together after the pilot.
+- [ ] Evaluate: `/architect distribution`
+
+### 9. GAIA persona and agent naming
+Horizon Zero Dawn themed names (GAIA as orchestrator, subfunctions per role) once roles stabilize.
+- [ ] Decide naming: `/architect agent personas`
+
+### 10. Other harnesses (Copilot, Gemini, own harness)
+Make skills load natively outside Claude Code (skills dirs, adapters), and inform a possible own harness.
+- [ ] Evaluate: `/architect harness support`
