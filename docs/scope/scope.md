@@ -20,7 +20,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 6 | Model routing per skill | Slice 1 | planned |
 | 7 | Pilot: design system in Paper | Slice 1 | in-progress |
 | 8 | Plugin or marketplace distribution | Deferred | planned |
-| 9 | GAIA persona and agent naming | Deferred | planned |
+| 9 | GAIA persona and agent naming | Slice 1 | in-progress |
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
 
 ## Foundations
@@ -71,15 +71,19 @@ First real project through the workflow (brownfield), proving the loop end to en
 - [x] UI foundation spec in the design system project: `/architect UI foundation` (spec 0001, triquetra-design-system#44, #45)
 - [ ] Ship one slice through `/develop`, `/check verify`, `/test`
 
+### 9. GAIA persona and agent naming · in-progress
+Naming layer only: the main session is GAIA and each skill runs as one of her nine subordinate functions, mapped by function (glossary in `docs/workflow/10-gaia.md`).
+**Decision (2026-11-20):** keep the mythological names behind GAIA (scope DEMETER, audit POSEIDON, architect ELEUTHIA, develop HEPHAESTUS, check HADES, test ARTEMIS, document APOLLO, sync AETHER, debug MINERVA); `scout`, `researcher`, and delegated children keep functional names. Names surface in docs, delegated thread titles, and one `global/RULES.md` line; never in `SKILL.md`, `OUTPUT-STYLE`, commands, or commit trailers. No voice or boundary changes. No game art or other game terms; revisit before feature 8.
+**Done when:** the engineer keeps the names after real use on the pilot.
+- [x] Decide naming (brainstorm, direction A)
+- [x] Glossary doc and `global/RULES.md` line
+- [ ] Try on the pilot (delegated thread titles, session intro), then keep, adjust, or drop
+
 ## Deferred
 
 ### 8. Plugin or marketplace distribution
 Package skills as a Claude Code plugin for versioned installs on other machines. Evaluate together after the pilot.
 - [ ] Evaluate: `/architect distribution`
-
-### 9. GAIA persona and agent naming
-Horizon Zero Dawn themed names (GAIA as orchestrator, subfunctions per role) once roles stabilize.
-- [ ] Decide naming: `/architect agent personas`
 
 ### 10. Other harnesses (Copilot, Gemini, own harness)
 Make skills load natively outside Claude Code (skills dirs, adapters), and inform a possible own harness.
