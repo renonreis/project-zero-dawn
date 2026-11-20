@@ -30,10 +30,11 @@ git diff 42d85b8 -- skills agents
 | A1 | Conversa no idioma do engenheiro, arquivos em inglês (bloco OUTPUT-STYLE, igual em todas) | `skills/*/SKILL.md` |
 | A2 | `/check review` tenta primeiro outro provedor via delegação do T3 (GPT/Copilot, Gemini/Antigravity) | `check/modes/review.md` |
 | A3 | Crítica de spec do `/architect` em outro provedor | `architect/internal/after-subagent.md` |
-| A4 | Paper como ferramenta de design padrão; regras de leitura de valores exatos | `develop/ui-guide.md`, `develop/ui/mcp.md`, `architect/internal/design-conversation.md` |
+| A4 | Paper como ferramenta de design padrão; regras de leitura de valores exatos; tokens podem vir do código (`## Design sources`) | `develop/ui-guide.md`, `develop/ui/mcp.md`, `architect/internal/design-conversation.md` |
 | A5 | Configuração `autonomy: confirm \| full` no `## Git`; deploy sempre confirma | `develop/flow/git.md`, `document/SKILL.md`, `audit/modes/greenfield.md` |
 | A6 | Pergunta de visibilidade do repo e registro no portfólio | `scope/modes/plan-greenfield.md`, `sync/SKILL.md` |
 | A7 | `/sync` faz merge sob `autonomy: full` com os checks do tier verdes | `sync/SKILL.md` |
+| A8 | Monorepo de produto único (ex.: DS + Storybook) usa um scope só | `scope/modes/plan-monorepo.md`, `scope/scope-template.md` |
 
 Toda nova divergência entra nesta tabela.
 
