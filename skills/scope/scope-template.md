@@ -130,7 +130,7 @@ Partial catalog; finish the remaining pieces via /develop. code in `src/catalog/
 
 ## Large product: epic split
 
-When `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), split by epic: **rename `scope.md` to `docs/scope/index.md`** (keep the At a glance table across all epics + a one line status rollup per epic, each linking its file), and **move each area's feature sections out into its own `docs/scope/<epic>.md`**. Promote **on demand**; don't split a small product early. File names are always **semantic** (`scope.md` / `index.md` / `<epic>.md`), never numbered. In a monorepo, each workspace gets its own `docs/scope/<workspace>/` the same way, with a top level `docs/scope/index.md` mapping the workspaces (one line + rollup each).
+When `scope.md` outgrows a comfortable scan (roughly a dozen plus features across clearly distinct areas), split by epic: **rename `scope.md` to `docs/scope/index.md`** (keep the At a glance table across all epics + a one line status rollup per epic, each linking its file), and **move each area's feature sections out into its own `docs/scope/<epic>.md`**. Promote **on demand**; don't split a small product early. File names are always **semantic** (`scope.md` / `index.md` / `<epic>.md`), never numbered. In a monorepo (unless it is a single product monorepo, see `modes/plan-monorepo.md`), each workspace gets its own `docs/scope/<workspace>/` the same way, with a top level `docs/scope/index.md` mapping the workspaces (one line + rollup each).
 
 ## Completion report block
 
