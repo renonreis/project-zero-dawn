@@ -15,7 +15,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 1 | Workflow method docs | Foundation | done |
 | 2 | Skills fork and adaptations | Foundation | in-progress |
 | 3 | Installation and global rules | Foundation | done |
-| 4 | Portfolio registry | Foundation | in-progress |
+| 4 | Portfolio registry | Foundation | done |
 | 5 | GitHub repository | Foundation | done |
 | 6 | Model routing per skill | Slice 1 | planned |
 | 7 | Pilot: design system in Paper | Slice 1 | in-progress |
@@ -43,11 +43,11 @@ Symlink install into `~/.claude` and `~/.agents`, plus `global/RULES.md` importe
 - [x] `scripts/install.sh` with uninstall
 - [x] Confirm in a new session outside this repo
 
-### 4. Portfolio registry · in-progress
+### 4. Portfolio registry · done
 One row per managed project, maintained by `/scope` and `/sync`.
 **Done when:** every active project has a row with repo, status, and tier.
 - [x] `docs/portfolio/registry.md`
-- [ ] Add the engineer's current projects
+- [x] Add the engineer's current projects (new ones enroll through `/scope` or `/audit`)
 
 ### 5. GitHub repository · done
 Publish Zero Dawn to GitHub and open the phase 1 PR.
@@ -68,7 +68,7 @@ First real project through the workflow (brownfield), proving the loop end to en
 **Done when:** the design system has AGENTS.md, a scope, a UI foundation spec (token contract from the code, parity with Paper), and one shipped slice.
 - [x] Locate the Paper file and code repo (Paper file in registry; repo renonreis/triquetra-design-system)
 - [x] `/audit` then `/scope` in the design system project (triquetra-design-system#41)
-- [ ] UI foundation spec in the design system project: `/architect UI foundation`
+- [x] UI foundation spec in the design system project: `/architect UI foundation` (spec 0001, triquetra-design-system#44, #45)
 - [ ] Ship one slice through `/develop`, `/check verify`, `/test`
 
 ## Deferred
