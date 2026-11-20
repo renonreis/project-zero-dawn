@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Zero Dawn installer: links this repo's skills and agents into the user's agent
-# folders and imports global/RULES.md from ~/.claude/CLAUDE.md.
+# folders, imports global/RULES.md from ~/.claude/CLAUDE.md, and links the same
+# rules as the user level instructions of other harnesses (Copilot CLI, Gemini/Antigravity).
 # Idempotent. Never overwrites a real file or folder; only manages its own symlinks.
 #   scripts/install.sh              install / refresh
 #   scripts/install.sh --uninstall  remove everything this script created
@@ -13,6 +14,7 @@ AGENT_TARGET="$CLAUDE_DIR/agents"
 GLOBAL_MD="$CLAUDE_DIR/CLAUDE.md"
 START="<!-- zero-dawn:start (managed by $ZD/scripts/install.sh) -->"
 END="<!-- zero-dawn:end -->"
+RULES_LINKS=("${COPILOT_HOME:-$HOME/.copilot}/copilot-instructions.md" "$HOME/.gemini/GEMINI.md")
 MODE="${1:-install}"
 
 link() { # link <src> <dest>
@@ -47,6 +49,9 @@ if [ "$MODE" = "--uninstall" ]; then
   for t in "${SKILL_TARGETS[@]}"; do unlink_ours "$t"; done
   unlink_ours "$AGENT_TARGET"
   strip_block; echo "  removed rules import from $GLOBAL_MD"
+  for r in "${RULES_LINKS[@]}"; do
+    [ -L "$r" ] && [ "$(readlink "$r")" = "$ZD/global/RULES.md" ] && rm "$r" && echo "  removed $r"
+  done
   exit 0
 fi
 
@@ -67,4 +72,5 @@ touch "$GLOBAL_MD"; strip_block
   echo "$END"
 } >> "$GLOBAL_MD"
 echo "rules → imported from $GLOBAL_MD"
+for r in "${RULES_LINKS[@]}"; do mkdir -p "$(dirname "$r")"; link "$ZD/global/RULES.md" "$r"; done
 echo "Done. Restart your agent sessions to pick up new skills."
