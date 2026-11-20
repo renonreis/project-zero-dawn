@@ -12,9 +12,9 @@ _These are recommendations, not requirements. You decide when a feature is `done
 
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
-| 1 | Workflow method docs | Foundation | in-progress |
+| 1 | Workflow method docs | Foundation | done |
 | 2 | Skills fork and adaptations | Foundation | in-progress |
-| 3 | Installation and global rules | Foundation | in-progress |
+| 3 | Installation and global rules | Foundation | done |
 | 4 | Portfolio registry | Foundation | in-progress |
 | 5 | GitHub repository | Foundation | done |
 | 6 | Model routing per skill | Slice 1 | planned |
@@ -25,11 +25,11 @@ _These are recommendations, not requirements. You decide when a feature is `done
 
 ## Foundations
 
-### 1. Workflow method docs · in-progress
+### 1. Workflow method docs · done
 PT-BR docs that explain the method, adapted from the reference guide.
 **Done when:** the engineer reviewed `docs/workflow/` and it matches how they want to work.
 - [x] Write docs 01 to 09: spec 0001
-- [ ] Engineer review and corrections
+- [x] Engineer review and corrections (approved 2026-11-20)
 
 ### 2. Skills fork and adaptations · in-progress
 Nine skills forked from jsmastery-pro/skills with surgical Zero Dawn adaptations (A1 to A7).
@@ -37,7 +37,7 @@ Nine skills forked from jsmastery-pro/skills with surgical Zero Dawn adaptations
 - [x] Vendor upstream verbatim, then adapt: spec 0001
 - [ ] Exercise adapted paths on the pilot (cross provider review, Paper source, autonomy, registry)
 
-### 3. Installation and global rules · in-progress
+### 3. Installation and global rules · done
 Symlink install into `~/.claude` and `~/.agents`, plus `global/RULES.md` imported in every session.
 **Done when:** a fresh session in another project lists the nine skills and follows the global rules.
 - [x] `scripts/install.sh` with uninstall
