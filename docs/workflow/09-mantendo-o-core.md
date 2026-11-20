@@ -11,7 +11,8 @@ O instalador:
 
 - cria links de `skills/*` em `~/.claude/skills/` (Claude Code) e `~/.agents/skills/` (convenção genérica de Agent Skills);
 - cria links de `agents/*.md` em `~/.claude/agents/` (subagentes `scout` e `researcher`);
-- adiciona ao `~/.claude/CLAUDE.md` um bloco gerenciado que importa `global/RULES.md` e diz onde fica o Zero Dawn.
+- adiciona ao `~/.claude/CLAUDE.md` um bloco gerenciado que importa `global/RULES.md` e diz onde fica o Zero Dawn;
+- liga o mesmo `global/RULES.md` como instruções globais do Copilot CLI (`~/.copilot/copilot-instructions.md`) e do Gemini/Antigravity (`~/.gemini/GEMINI.md`), para que sessões nesses provedores no T3 também sigam as regras.
 
 Como são links simbólicos, editar uma skill aqui vale na hora para todos os projetos (reinicie a sessão). Nunca sobrescreve arquivo ou pasta que não seja dele.
 
