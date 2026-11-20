@@ -20,4 +20,4 @@ O design system vive no **Paper** (Paper Design, conectado via MCP). Ele é a fo
 
 ## O design system como primeiro projeto piloto
 
-O DS é o primeiro projeto a passar pelo workflow (brownfield): `/audit` → `/scope` → `/architect` (fundação de UI / tokens) → `/develop`. Pendências para começar estão na feature 8 do [scope](../scope/scope.md): localizar o arquivo do Paper, decidir se existe (ou vai existir) um repositório de código do DS e qual o formato de saída (CSS variables, Tailwind theme, pacote de componentes).
+O DS é o primeiro projeto a passar pelo workflow (brownfield): `/audit` → `/scope` → `/architect` (fundação de UI / tokens) → `/develop`. Projeto: **Triquetra Design System** ([arquivo no Paper](https://app.paper.design/file/01M7R4TP595GEKCEE8SHQCTJMX/p-2-0) · [repositório](https://github.com/renonreis/triquetra-design-system)). Acompanhamento na feature 7 do [scope](../scope/scope.md).

@@ -9,6 +9,7 @@ Loaded in every session on this machine. Keep it short: every line costs tokens 
 
 ## Autonomy
 - Without asking: create GitHub repos, branch, commit, push, open PRs, merge.
+- Announce every outward action as it happens and list them at the end of the reply (repo created, pushed, PR opened or merged, issue filed), each with its link, plus what now waits on the engineer.
 - Always ask first: any deploy or release to an environment, anything that spends money, deleting repos or data, publishing outside GitHub.
 - New repo: ask public or private, with a recommendation (most will be public).
 - Hostinger is forbidden: never use Hostinger tools, MCP servers, skills, or APIs until the engineer lifts this rule in this file.

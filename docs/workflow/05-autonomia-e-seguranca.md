@@ -21,6 +21,10 @@ Isso é ligado por projeto no bloco `## Git` do `AGENTS.md`:
 
 `autonomy: confirm` volta ao comportamento original das skills (push e PR pedem confirmação). Use em projetos de terceiros ou de clientes.
 
+## Transparência: sempre anunciar
+
+Autonomia não é silêncio. Toda ação com efeito fora da máquina (repo criado, push, PR aberto, merge, issue) é **anunciada quando acontece** e **listada no fim da resposta**, com link, junto com **o que agora depende de você** para o fluxo continuar.
+
 ## O que sempre pede o seu ok
 
 - **Deploy** ou release para qualquer ambiente.
