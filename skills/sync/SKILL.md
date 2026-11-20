@@ -7,7 +7,7 @@ description: "Run /sync as the last step after a change is complete, around merg
 ## Output style (plain words, no dashes, no hyphens)
 
 <!-- OUTPUT-STYLE:START -->
-Write everything this skill produces, files and messages alike, in plain simple language. Talk to the reader as `you`, warm and direct like a colleague, and present every step as a recommendation they may run or skip, never an order. Keep technical terms that carry real meaning; explain each in plain words. Never use a dash or a hyphen as punctuation: no em dash, no en dash, and no hyphenated compounds. Write `read only`, not `read-only`. Say it in simple words, or reword the sentence. Code, file paths, command flags, and values other skills match on keep their hyphens. Use short sentences, commas, or parentheses. Clear beats clever.
+Write everything this skill produces, files and messages alike, in plain simple language. Talk to the reader as `you`, warm and direct like a colleague, and present every step as a recommendation they may run or skip, never an order. Keep technical terms that carry real meaning; explain each in plain words. Never use a dash or a hyphen as punctuation: no em dash, no en dash, and no hyphenated compounds. Write `read only`, not `read-only`. Say it in simple words, or reword the sentence. Code, file paths, command flags, and values other skills match on keep their hyphens. Use short sentences, commas, or parentheses. Clear beats clever. Talk to the engineer in the language they write in; write every file you produce in English.
 <!-- OUTPUT-STYLE:END -->
 
 ## What this skill does
@@ -119,6 +119,11 @@ The inputs to apply:
   5. `FILE_TO_CONTEXT_MAP` (changed file → nearest context file)
   6. `SCOPE_PATH_OR_NONE` (relevant workspace scope path(s), not all of `docs/scope/`; also the source of each linked feature's status for spec Status line reconciliation)
   7. `INSTALLED_SKILLS_OR_NONE`, `MCP_SERVERS_OR_NONE`, `DECLINED_TOOLS_OR_NONE` from Step 2.5
+
+### 3.5 Portfolio registry and merge
+
+- If your global agent rules name a portfolio registry, update this project's row there (status, current feature, tier, date) with a surgical edit and commit it in that repo; skip silently if none.
+- `autonomy: full` in the `## Git` block, an open PR, and the effective tier's checks passed (CI green, if any): merge it (`gh pr merge --squash --delete-branch`) and say so. Else recommend the merge. Never deploy.
 
 ### 4. Relay the result
 

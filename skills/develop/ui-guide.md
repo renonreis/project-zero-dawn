@@ -22,12 +22,12 @@ You are a senior product designer shipping a real product, not a developer wirin
 
 ## Design source (route by what you were given)
 
-1. **Figma connected (the spec says use it)** → pull the real design from Figma, build to the frames. Route: `ui/mcp.md`.
+1. **Design tool connected (the spec says use it; Paper by default, Figma also works)** → pull the real design from it, build to the frames. Route: `ui/mcp.md`.
 2. **Image provided (pasted in chat, not a repo file)** → replicate it pixel perfect. The image is both the look and the composition, so match it faithfully and do NOT embellish beyond it. Tokenize what you see (values into CSS, character into `design.md`) and derive the responsive and accessible behavior a single screenshot cannot show. Route: `ui/image.md`.
 3. **A design system already exists** (`design.md` + tokens in CSS) → design the new page WITHIN that system, at the bar above: a full professional surface, consistent with what is already shipped. Route: `ui/existing.md`.
 4. **Nothing provided** → establish the design system first (the `frontend-design` skill when available, else derive it from the rules in `ui/generate.md` B2 and verify its contrast), record it in `design.md` (character + mandate + pointers) with the tokens written to CSS, then build to the bar above, maximalist and complete. Route: `ui/generate.md`.
 
-Cases 3 and 4 get the full chat app treatment (bold, complete, product level); case 2 gets faithful fidelity; case 1 gets Figma fidelity. Follow the source the spec recorded.
+Cases 3 and 4 get the full chat app treatment (bold, complete, product level); case 2 gets faithful fidelity; case 1 gets design tool fidelity. Follow the source the spec recorded.
 
 All paths converge on: component or screen → detect the platform and its systems → token sync → the implementation phases.
 
@@ -43,15 +43,15 @@ Any Agent Skills client, macOS/Linux/Windows. Detection snippets (`find`, `cat |
 
 ## Step 0: Where the design comes from (one decision, made once)
 
-Check the governing spec first (`/develop` read it in Step 2). The design source is the engineer's choice, so follow what the spec recorded, never ask again, and never default to Figma just because an MCP is connected.
+Check the governing spec first (`/develop` read it in Step 2). The design source is the engineer's choice, so follow what the spec recorded, never ask again, and never default to a design tool just because an MCP is connected.
 
 Route on what the spec recorded, using the *Design source* table above:
-- Figma or another design MCP → `ui/mcp.md`.
+- Paper, Figma, or another design MCP → `ui/mcp.md`.
 - A screenshot or a pasted image → `ui/image.md`.
 - An existing design system, or "extract from existing UI" → **Step 0.1**.
 - A described direction, a brand or site URL, or nothing at all → `ui/generate.md` (B1 finds the direction, B2 derives and verifies the tokens into CSS and the character into `design.md`), then implement.
 
-No spec governs this UI, or the spec is silent on the design system → fall through to the detection in Steps 0.1 to 0.3. If detection settles nothing, ask *"How should I get the design for this?"* with options **From Figma (its MCP)** · **From a screenshot / images** · **From the existing `design.md` / current UI** · **No design, suggest a direction** (the picker adds Other), then proceed by their pick.
+No spec governs this UI, or the spec is silent on the design system → fall through to the detection in Steps 0.1 to 0.3. If detection settles nothing, ask *"How should I get the design for this?"* with options **From Paper (its MCP)** · **From a screenshot / images** · **From the existing `design.md` / current UI** · **No design, suggest a direction** (the picker adds Other), then proceed by their pick.
 
 ## Step 0.1: Check for existing design.md
 

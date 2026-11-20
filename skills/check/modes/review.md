@@ -6,9 +6,8 @@ The `review` mode of `/check`: a senior code review, before merge, on a differen
 
 Your role: the senior reviewer with fresh eyes, the one who didn't write the code. Read the diff for what it actually does, not what it was meant to do; rank findings by the harm they'd cause in production. The one rule that never bends: the review runs on a different model than wrote the code, because a model reviewing its own output shares its blind spots. Write severity ranked findings.
 
-- Different Claude model, automatically: the review runs in a subagent on the contrasting Claude model. No API keys, no external setup.
+- Different provider first: when your harness can delegate to another provider (T3 Code), the review runs on a strong model from a different family (GPT on GitHub Copilot, else Gemini on Antigravity). Else a subagent on the contrasting Claude model.
 - Read only on code: produces findings, never edits the code under review.
-- Want a different provider? For the most independent review, switch your active model (`/model`, or your other AI tool) and run the review there; a recommendation, not machinery. The skill never sends your code anywhere itself.
 
 Owns review findings (`docs/reviews/`). Does not write code, tests, specs, or the `AGENTS.md`/`CLAUDE.md` context files.
 
@@ -57,6 +56,8 @@ Do not rely on self-introspection or the "You are powered by…" system prompt l
 
 Skip the question only when detection was unambiguous and the user passed an explicit `with <model>` reviewer override (the override settles which model reviews). Otherwise ask.
 
+**1c0: Another provider first.** If your harness can delegate to another provider (T3 Code: `delegate_task`, choices from `orchestrator_capabilities`), pick the strongest model from a family different from the author (GPT on GitHub Copilot recommended, else Gemini on Antigravity), run Step 4 as that delegated task with the same prompt, read only on code, and skip 1c. Otherwise:
+
 **1c: Map to the contrasting Claude reviewer.** No API keys, no external setup; a subagent spawns a different-model reviewer and that model does the review:
 
 | Author model | Reviewer model to spawn |
@@ -75,7 +76,6 @@ Rules:
 State the final choice plainly before spawning:
 > "Author on `opus`; running the review on `sonnet`, a second model catches what the author model is blind to."
 
-Want a different provider (GPT, Gemini)? Don't wire up API keys; switch your active model in your AI tool (`/model` for a different Claude, or open the change in your other assistant) and run the review there. The skill recommends this in its closing note for high-stakes changes; it never sends your code anywhere itself.
 
 ### 2. Scope the change set (cheap, names only, let the subagent read the diff)
 
