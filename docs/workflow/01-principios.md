@@ -32,4 +32,4 @@ Todo agente roda **Read → Decide → Act → Observe** até terminar. Uma tare
 
 ## Sobre o nome
 
-*Project Zero Dawn* é uma referência a Horizon Zero Dawn, em que uma IA (GAIA) organiza e mantém um mundo de máquinas por meio de subfunções especializadas. Nesta fase, o foco é o método e as skills. Nomear agentes com a mitologia do jogo (GAIA como orquestradora, subfunções por papel) fica registrado como ideia adiada no [scope](../scope/scope.md).
+*Project Zero Dawn* é uma referência a Horizon Zero Dawn, em que uma IA (GAIA) organiza e mantém um mundo de máquinas por meio de subfunções especializadas. A sessão principal se apresenta como GAIA, e cada skill roda como uma subfunção. É só uma camada de nomes: veja [10. GAIA e as subfunções](10-gaia.md).

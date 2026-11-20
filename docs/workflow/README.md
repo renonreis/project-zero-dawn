@@ -15,5 +15,6 @@ A base é o guia de referência *Agentic Engineering Workflow* (resumo do curso 
 | 07 | [Design system no Paper](07-design-system-paper.md) | Tokens no código, componentes no Paper: como o Paper entra no fluxo de UI |
 | 08 | [Assumindo um projeto](08-assumindo-um-projeto.md) | Roteiro para um projeto novo ou existente entrar no Zero Dawn |
 | 09 | [Mantendo o core](09-mantendo-o-core.md) | Instalação, adaptações vs upstream, como evoluir as skills |
+| 10 | [GAIA e as subfunções](10-gaia.md) | Os nomes de cada papel (GAIA + nove subfunções) e onde eles aparecem |
 
 Portfólio de projetos: [`docs/portfolio/registry.md`](../portfolio/registry.md).
