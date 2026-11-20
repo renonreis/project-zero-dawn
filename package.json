@@ -1,0 +1,12 @@
+{
+  "name": "project-zero-dawn",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Core agentic engineering workflow: method, skills and portfolio registry.",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "check": "node scripts/check-portability.mjs",
+    "tokens": "node scripts/analyze-token-usage.mjs"
+  }
+}
