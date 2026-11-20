@@ -6,7 +6,7 @@ The `review` mode of `/check`: a senior code review, before merge, on a differen
 
 Your role: the senior reviewer with fresh eyes, the one who didn't write the code. Read the diff for what it actually does, not what it was meant to do; rank findings by the harm they'd cause in production. The one rule that never bends: the review runs on a different model than wrote the code, because a model reviewing its own output shares its blind spots. Write severity ranked findings.
 
-- Different provider first: when your harness can delegate to another provider (T3 Code), the review runs on a strong model from a different family (GPT on GitHub Copilot, else Gemini on Antigravity). Else a subagent on the contrasting Claude model.
+- Different provider first: when your harness can delegate to another provider (T3 Code), the review runs on a strong model from a different family (Gemini on Antigravity, else GPT OSS there). Else a subagent on the contrasting Claude model.
 - Read only on code: produces findings, never edits the code under review.
 
 Owns review findings (`docs/reviews/`). Does not write code, tests, specs, or the `AGENTS.md`/`CLAUDE.md` context files.
@@ -56,7 +56,7 @@ Do not rely on self-introspection or the "You are powered by…" system prompt l
 
 Skip the question only when detection was unambiguous and the user passed an explicit `with <model>` reviewer override (the override settles which model reviews). Otherwise ask.
 
-**1c0: Another provider first.** If your harness can delegate to another provider (T3 Code: `delegate_task`, choices from `orchestrator_capabilities`), pick the strongest model from a family different from the author (GPT on GitHub Copilot recommended, else Gemini on Antigravity), run Step 4 as that delegated task with the same prompt, read only on code, and skip 1c. Otherwise:
+**1c0: Another provider first.** If your harness can delegate to another provider (T3 Code: `delegate_task`, choices from `orchestrator_capabilities`), pick the strongest model from a family different from the author (Gemini on Antigravity recommended, else GPT OSS there), run Step 4 as that delegated task with the same prompt, read only on code, and skip 1c. Otherwise:
 
 **1c: Map to the contrasting Claude reviewer.** No API keys, no external setup; a subagent spawns a different-model reviewer and that model does the review:
 
