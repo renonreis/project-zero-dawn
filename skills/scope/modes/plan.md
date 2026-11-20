@@ -60,7 +60,7 @@ From the answers, produce the feature list: foundations first (Step 4), then sli
 - **Needs spec?**: the invent test: would building it require a decision the engineer hasn't made? Yes for a provider/library choice, a data model, a cross cutting pattern, the design system, a whole page/screen with no spec yet, or behavior that is not trivial (search, filtering, recommendations). No only for genuinely pure implementation an existing `design.md`/spec/convention covers. Unsure → yes; an unflagged decision is the expensive miss. `GA`/`Beta` tier → almost always yes.
 - One decision per spec: multiple distinct decisions in one feature → one `Needs spec: yes` item each, never one lumped "strategy" spec. Several sharing one broad decision that then splits → an umbrella that dependents reference; never mark a dependent `no` when it carries its own decision.
 
-No build task breakdown here: a not yet designed feature gets exactly one checkbox, its entry command (per `scope-template.md`; the coding standards and tooling foundation starts with `/audit`). Never enumerate UI / data model / API / test sub tasks, and no separate `Next:` line.
+No build task breakdown here: a not yet designed feature gets exactly one checkbox, its entry command: `/architect <feature>` when it needs a decision, otherwise `/develop <feature>` (the coding standards and tooling foundation starts with `/audit`). Never enumerate UI / data model / API / test sub tasks, and no separate `Next:` line.
 
 Analysis/inventory is not a scope row: cataloguing duplication, listing call sites, auditing current state is decision support research living with the spec (`/architect` puts it in the spec's `rationale.md`). Never plan a row or step that writes a `.md` into `docs/scope/`.
 

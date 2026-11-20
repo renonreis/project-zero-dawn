@@ -72,8 +72,10 @@ Any Agent Skills client on macOS, Linux, Windows. Detection snippets are POSIX r
 
 ### Step 0: Infer intent, then load one mode file
 
-Check whether a scope exists under the artifact base, infer the behavior (see "One command, inferred intent"; "reconcile / what's next" also means replan), then read exactly one mode file and follow it: `modes/plan.md`, `modes/replan.md`, or `modes/add.md`. Read another only if the inferred behavior changes.
+Check whether a scope exists under the artifact base and infer the behavior (see "One command, inferred intent"; "reconcile / what's next" also means replan).
 
 Ambiguous (a new slice vs a single feature): pick the most likely reading from the scope and name it in the report; truly unclear → one line clarifying question.
 
 Plan with no idea given (no argument, no scope to extend): stop and ask "What are you building? Describe the product or the slice of it you want to plan (one or two sentences about what it does and who it's for)." Use the answer as the product idea.
+
+Once intent and any required product idea are known, read exactly one mode file and follow it: `modes/plan.md`, `modes/replan.md`, or `modes/add.md`. Read another only if the inferred behavior changes.
