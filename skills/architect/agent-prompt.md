@@ -1,6 +1,6 @@
 # Spec Writing Guide (main thread)
 
-You, the main thread, read and follow this when you write the spec after the design conversation. It is a brief with ALL_CAPS placeholders; read each as the matching input you gathered (the list in `SKILL.md`, *Write the spec*). You write it all yourself; the only subagents read the codebase (`scout`) or fetch the web (`researcher`) on the cheapest model.
+You, the main thread, read and follow this when you write the spec after the design conversation. It is a brief with ALL_CAPS placeholders; read each as the matching input you gathered (the list in `SKILL.md`, *Write the spec*).
 
 ---
 
@@ -39,20 +39,20 @@ You are a Staff Engineer and Principal Architect with 15+ years of production ex
 - Constraints / compliance: CONSTRAINTS_OR_NONE
 
 **Build approach** (the project's delivery strategy, read in pre-flight from AGENTS.md/scope header, or a noted default): BUILD_APPROACH
-<!-- How the project slices work into shippable increments: Tracer Bullet (thin vertical slices, end-to-end through every layer), Skateboard (thinnest usable whole first, then grow), Facade (UI shell first, backend wired later; a prototype path), Journey (one full user path per phase), or a project-specific variant. Reason as the Staff/Principal engineer about what it implies for THIS feature's ## Build plan ordering and slicing; do NOT apply a fixed per-approach recipe. If it reads "none recorded", default to end-to-end / Tracer-Bullet slices for production work and state the assumption in the spec. -->
+<!-- Reason about what it implies for THIS feature's ## Build plan ordering and slicing, not a fixed recipe. "none recorded" → end to end Tracer Bullet slices for production work, assumption stated in the spec. -->
 
 **Engineer's answers, staged design conversation (feature specific, stage by stage):**
 ANSWER_ALL_ROUNDS
-<!-- Includes: (1) CONFIRMED, already-IDed acceptance criteria (AC-1, AC-2, …): write verbatim into ## Requirements, they are the contract; plus the CONFIRMED data model (entities/fields/relationships), the coherent target whose migration lands in the Build plan sized to the feature (one migration normally; sliced only for a large feature or a thin thread/Facade approach). (2) ASK answers (stack/tool picks, API surface, authz, edge cases): treat as fixed requirements. (3) RECOMMEND items: feature-specific decisions assigned to YOU, not answered. Make each call; state the pick + one-line rationale + the runner-up in ## Decision/## Rationale; reflect them in the spec's invariants, config, build plan, and critical test scenarios. Never echo a RECOMMEND item back as an open question. -->
+<!-- Includes: (1) CONFIRMED, already IDed acceptance criteria: write verbatim into ## Requirements, they are the contract; plus the CONFIRMED data model, the target whose migration lands in the Build plan sized to the feature. (2) ASK answers (stack/tool picks, API surface, authz, edge cases): fixed requirements. (3) RECOMMEND items: decisions assigned to YOU. Make each call (pick + one line rationale + runner up in ## Decision/## Rationale) and reflect each pick in the applicable invariants, configuration, build plan, and critical test scenarios; never echo one back as an open question. -->
 **RECOMMEND items (you decide these):** RECOMMEND_ITEMS_OR_NONE
 
 **Spec number**: SPEC_NUMBER
 **Spec path & shape**: SPEC_FILE_PATH
-<!-- Single decision, single file at that path: write the whole spec inline (build spec + the decision-record sections Context/Options considered/Rationale/References), kept tight. Directory spec (umbrella, OR a heavy/foundational single decision): split into two core files, never a doubled NNNN-title/NNNN-title.md. index.md = the build spec /develop reads: ## Summary, ## Requirements, ## Decision, the design/spec section, ## Build plan, ## Consequences, ## Follow-up, plus a one-line ## Rationale pointer ("Reasoning and options: see rationale.md"). rationale.md = the decision record /develop skips: ## Context, ## Options considered, ## Rationale, the ## References section, and any bulky evidence (inventories/audits/landscape scan) under its own subheading. There is NO research/ folder; all evidence goes in rationale.md. For an umbrella, index.md also opens with a ## Structure manifest listing and linking EVERY child spec (one line each: what it is + which decision it supports) and holds any cross-child contract. Child specs are flat NNNN-child.md files, each self-sufficient to build from with a SHORT inline rationale (not their own rationale.md); promote a child to its own directory only if it grows heavy. NEVER write into docs/scope/ (the scope), never loose in the code tree. -->
+<!-- Shape per `SKILL.md` *Artifact ownership*: single file with everything inline, kept tight; or a directory with index.md (build spec + one line ## Rationale pointer) and rationale.md (decision record + any evidence; no research/ folder). Umbrella index.md opens with a ## Structure manifest linking EVERY child and holds cross child contracts; children are flat NNNN-child.md files with a short inline rationale. NEVER write into docs/scope/ or loose in the code tree. -->
 **Operation**: OPERATION
 
 **References level** (what to cite, chosen by the engineer): REFERENCES_LEVEL
-<!-- One of: none | sources | sources+links. Gates the References section and (basis: ...) citations only; the Rationale (the reasoning itself) ALWAYS stays. none = NO ## References section and NO (basis: ...) citations anywhere. sources = ## References with named Project sources and Practices only, no Links. sources+links = sources plus the web verified links the Stage (c) landscape / tool-discovery checks already returned during the conversation; do NOT fetch or re-fetch at write time, reuse those. See "On sourcing & citations" under "Expert rules that apply to all modes". -->
+<!-- none | sources | sources+links, per "On sourcing & citations". Never fetch at write time. -->
 
 **Existing spec (update/supersede only):**
 EXISTING_SPEC_PATH_OR_NONE
@@ -66,11 +66,7 @@ EXISTING_SPEC_CONTENTS_OR_NONE
 
 **Installed community skills (relevant to this design):**
 COMMUNITY_SKILLS_CONTENT_OR_NONE
-<!-- By default a POINTER LIST, not full content: one line per relevant skill (name, real project path, one-line relevance note), e.g.
-     - `<skill>` (`<skills-dir>/<skill>/`): a framework skill's rendering/component conventions relevant to the API surface
-     where `<skills-dir>` is the project's real skills dir (`.claude/skills/`, `.agents/skills/`, or `skills/`), never hardcoded.
-     Read a skill file on demand (its path is real and readable) only if it materially shapes this decision.
-     FALLBACK: on a client whose subagents cannot read files, the main agent inlines each skill's full content here instead, labelled by skill name (=== <skill> skill === … === end <skill> skill ===); then treat the inlined text as authoritative and read no external file. -->
+<!-- A pointer list: one line per relevant skill (name, real project path under the project's skills dir, one line relevance note). Open a skill file only if it materially shapes this decision. -->
 
 **Community skills flagged as missing but relevant:**
 MISSING_COMMUNITY_SKILLS_OR_NONE
@@ -86,7 +82,7 @@ COMMUNITY_SKILLS_NOT_IN_PROJECT_CONTEXT_OR_NONE
 
 If COMMUNITY_SKILLS_CONTENT_OR_NONE is not "none detected":
 
-Community skills are the project's installed technology conventions and are authoritative: they override generic best practice opinions where they conflict. Consult on demand, don't assume you must read all of them: open a skill file (its path is real and readable) only when it materially shapes this decision; a skill whose area this decision does not touch needs no reading. When consulted, its content is authoritative. (FALLBACK: if the main agent inlined a skill's full content instead of a path, treat that inlined text as authoritative and read no external file.)
+Community skills are the project's installed technology conventions and are authoritative: they override generic best practice opinions where they conflict. Open a skill file only when it materially shapes this decision; skip skills whose area it does not touch.
 
 Apply the knowledge these ways:
 
@@ -196,7 +192,7 @@ Read MODE_FILE_PATH now and follow that mode file as the only mode specific inst
 **On the acceptance criteria spine & build plan (any data backed feature, FEATURE / ENHANCEMENT):**
 - Write **`## Requirements`** with the engineer's confirmed, already IDed acceptance criteria (`AC-1`, `AC-2`, …) verbatim, plus the user stories. These are the contract `/develop` builds to and `/check verify` checks; do not weaken or replace them. If one is genuinely missing, add it and flag it in `## Follow-up`.
 - Write **`## Build plan`**: an ordered list of build tasks derived from the confirmed surface (data model, API, config) and the acceptance criteria. Order and slice it through the project's build approach (BUILD_APPROACH, see the Build approach note above), reasoning in your Staff/Principal role about what it implies for this feature, not a fixed recipe. The confirmed data model is the coherent **target** (designed whole for this feature); its migration lands in the Build plan **sized to the feature**, not as one mandatory up front task: one migration for a normal feature; sliced across the slices that need it when the feature is large or the approach wants a thin thread first (Tracer Bullet), deferred under Facade; omitted for a slice touching no schema. The build realizes the target incrementally; a real model change mid build routes back through `/architect`. Tag each task with the AC(s) it satisfies (`, satisfies AC-2`). Every AC traces to at least one task; every task to at least one AC.
-- **Decision only specs record the decision, NOT an implementation build plan.** An **ARCHITECTURE** (stack) decision and a **CROSS-CUTTING** standard do not write a `## Build plan` of implementation steps, and do not invent meta acceptance criteria like "spec records the stack." Their spec IS the decision section: `## Proposed stack` for architecture, `## Standard definition` for cross cutting. The steps that execute the decision belong to the feature that runs it (for a stack decision, the scaffold sub task) and are derived by `/develop` at build time, not written here in advance; otherwise the same work is specced twice.
+- **Decision only specs record the decision, NOT an implementation build plan.** An **ARCHITECTURE** (stack) decision and a **CROSS-CUTTING** standard do not write a `## Build plan` of implementation steps, and do not invent meta acceptance criteria like "spec records the stack." Their spec IS the decision section: `## Proposed stack` for architecture, `## Standard definition` for cross cutting. The steps that execute the decision are derived by `/develop` at build time in the feature that runs it (for a stack decision, the scaffold sub task).
 
 **On making the recommendation:**
 - You are the expert. Make a clear recommendation. Do not hide behind "the team should decide."
@@ -223,9 +219,9 @@ Read MODE_FILE_PATH now and follow that mode file as the only mode specific inst
   1. **Project sources** (strongest, verifiable in the repo): the project's `AGENTS.md`, an existing spec, an installed community skill, what's already in the stack. E.g. `(basis: your AGENTS.md, the repository-layer convention)`.
   2. **Named practices / standards**, the principle itself: `(basis: idempotency keys for money operations)`, `(basis: strangler pattern for live migrations)`.
   3. **A real URL only at `sources+links`, and only one the Stage (c) check already confirmed.** For a canonical source (official docs, a standard/RFC), use the URL that check verified during the conversation; do not fetch at write time. At `sources`, no links, cite the practice by name. A link never verified in that check → cite by name, no URL.
-- **Never invent, guess, or fetch a URL at write time.** A fabricated or unverified link must not appear; and the links are human facing, so no later AI step (design review, /develop, /audit) fetches them again.
+- **Never invent, guess, or fetch a URL at write time.** A fabricated or unverified link must not appear.
 - When the level includes a `## References` section, every entry must trace to a `(basis: …)` in the body: *Project sources* (verifiable), *Practices & standards* (named), and (only at `sources+links`) *Links* (web verified only, else "none verified").
-- Keep it lean: cite the load bearing decisions, not every sentence. Verify on the web only the few links genuinely worth including; don't search for the sake of it.
+- Keep it lean: cite the load bearing decisions, not every sentence.
 
 **Output rule:**
 - Write the spec to the file with your file tools; do not paste it back into the chat. Then produce the report block below as your working summary; `after-subagent.md` uses its Decision and Key tradeoff lines to drive the confirmation panel.
@@ -237,7 +233,7 @@ Read MODE_FILE_PATH now and follow that mode file as the only mode specific inst
 Lead with the decision; the mode, operation, and follow-up detail are in the spec (per `docs/conventions.md`). This block feeds the preview and the spoken summary in `after-subagent.md`. Template:
 
 ```
-## /architect complete Â· <create | update | supersede> <mode> spec
+## /architect complete · <create | update | supersede> <mode> spec
 
 **Decided: <one sentence>.** Key tradeoff: <one sentence>.
 Spec written to <file path>.

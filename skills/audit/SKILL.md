@@ -60,7 +60,7 @@ Gather several signals (a file count alone misleads: a scaffold inflates it, an 
 4. Monorepo signal: workspace markers (`pnpm-workspace.yaml`, `turbo.json`, a `"workspaces"` field in `package.json`) or any `apps/*/package.json` / `packages/*/package.json` near the root.
 5. **Workflow setup signal (`WORKFLOW_SETUP`)**: root AGENTS.md is MISSING while the workflow has already decided the stack, i.e. a `docs/specs/` architecture spec exists (a `## Proposed stack` section), and/or `docs/scope/` has a "Stack and architecture" (or similar foundational scaffold) feature. This is the intended greenfield order (`/scope` → `/architect` decides the stack → `/develop` scaffolds it → `/audit`): freshly scaffolded, still needs coding standards captured. When it fires, the manifest and scaffold source that now exist are the scaffold, not a existing codebase.
 
-Pick the phase. The order of checks matters: the workflow setup signal outranks the raw code count, because a fresh scaffold has a manifest and source files yet is still greenfield.
+Pick the phase. The workflow setup signal outranks the raw code count (a fresh scaffold has a manifest and source yet is still greenfield). Anything ambiguous falls to Phase 0; never default a maybe greenfield project to brownfield.
 
 | Condition | Phase |
 |---|---|
@@ -70,8 +70,6 @@ Pick the phase. The order of checks matters: the workflow setup signal outranks 
 | `ROOT_MISSING`, no `WORKFLOW_SETUP`, no source files AND no manifest | Phase 1 |
 | `ROOT_MISSING`, no `WORKFLOW_SETUP`, has code (source ≥ 10 or a manifest), ≥ 2 commits and clearly real feature code (not just scaffold) | Phase 2, any language |
 | `ROOT_MISSING`, no `WORKFLOW_SETUP`, has code but it looks like untouched scaffold, or ≤ 1 commit, or you can't tell greenfield from brownfield | Phase 0, ask |
-
-Why this order: a fresh scaffold has a manifest and starter files but is still greenfield, so a raw code count alone would misread it as brownfield and skip the standards questions; the workflow setup signal catches that and routes to greenfield. Truly brownfield (Phase 2) means real feature code, real history, and no workflow setup in progress. Anything ambiguous falls to Phase 0; never default a maybe greenfield project to brownfield.
 
 Monorepo (`MONOREPO=yes`): root plus a light stub per workspace, deepen on demand. Each workspace (`apps/*`, `packages/*`) is a first class area; its primary doc lives at the workspace root (`packages/api/AGENTS.md`), never buried deeper. A whole-repo run does not deep scan every workspace; write the repo root `AGENTS.md` (monorepo wide tooling, shared conventions) plus a light stub per workspace from its manifest, no code scan, with root pointers. The full conventions/gotchas/key files scan happens when the engineer runs `/audit packages/api` (Phase 3) or first builds there. A spot inside a workspace that warrants its own doc (`packages/ui/src/mdx/`) gets one in addition to the workspace root doc, linked from it. A doc already buried in a workspace with no workspace root doc: ask: "`packages/ui` has a context file at `src/mdx/` but none at its root. Move it up to `packages/ui/AGENTS.md`, or keep it as a nested doc under a new `packages/ui/AGENTS.md`?" On move: relocate it to the workspace root. On keep nested: create the workspace root `AGENTS.md` AND keep the deep one, linked from root. Migrate legacy `CLAUDE.md` content per the convention above. Apply `MONOREPO=yes` plus the workspace list as you write.
 
@@ -98,11 +96,3 @@ Don't guess. Ask once via your agent's interactive option picker (`AskUserQuesti
 ### After all phases
 
 If no `AGENTS.md` was written when it should have been (the file is missing/empty), report the failure and do it again; don't relay success it didn't produce. Otherwise relay the report: what was discovered (2 to 4 bullets), what was written (file paths), what was proposed or skipped (if existing files were found).
-
-## Pattern presets
-
-See `patterns/` for the four coding style presets used in Phase 1 (greenfield mode).
-
-## Writing guide
-
-See `agent-prompt.md` (the main thread reads it at write time; its per phase instructions and `AGENTS.md` templates).

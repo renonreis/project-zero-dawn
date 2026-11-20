@@ -33,7 +33,7 @@ Spec status behaves one of two ways, decided by whether a buildable scope featur
 
 A spec documenting already shipped work (the "already built" path, or a linked feature already `existing`) is born `Accepted`.
 
-**The `Assumed` status.** `/develop` may create a spec in status `Assumed` when the engineer chooses to build before a load bearing decision is deliberated. It records the assumption the build used, not a deliberated decision. The feature can still be marked `done`; the `Assumed` spec stays flagged as owing ratification and does not block it. Only `/architect` clears the `Assumed` status, by ratifying (below). `/architect` never creates an `Assumed` spec; it only deliberates one that already exists.
+**The `Assumed` status.** `/develop` creates it only when the engineer chooses `Build now, record it as an assumed spec`: it records the assumption the build used, and never blocks the feature's `done`. Only `/architect` clears it, by ratifying (below); `/architect` never creates one.
 
 Writes no code. Never updates `AGENTS.md`/`CLAUDE.md` (/sync owns that).
 
@@ -59,8 +59,6 @@ Never bundle a complete data model, full stack, or ready made acceptance criteri
 
 Recommendations align with the stack in use (on a BaaS, prefer its auth/storage over new external tools; reuse beats sprawl). Web or mobile alike: infer the platform, never assume web.
 
-That is the intent, not the procedure. How to run the questioning lives in `internal/design-conversation.md`, which Execution below makes you read in full before you ask a single design question.
-
 ## Artifact ownership
 
 Spec files in `docs/specs/`, created or updated by this skill only, plus any supporting evidence it produces (inventories, audits), which lives in the spec's `rationale.md` (directory spec) or inline (single file spec), never in the scope folder (`docs/scope/` is owned by `/scope`, not a spec).
@@ -83,7 +81,7 @@ Two independent choices, location (repo shape) and shape (decision size):
 ## Portability (any OS, any agent)
 
 - **Commands**: `git` is the only required CLI, same on every OS. Other shell snippets (`mkdir -p`, `date`, `find`, `ls`, `cat`, `wc`) are POSIX reference, not literal scripts; use your agent's cross platform file tools (read, search/glob, write, create dir) and your knowledge of today's date. Create `docs/specs/` with your write tool, not `mkdir`.
-- **Bundled files**: `agent-prompt.md`, `agent-modes/*.md`, and `spec-template.md` live at paths relative to this skill's folder. The main thread reads these itself right before it writes the spec (see *Write the spec*): `agent-prompt.md` (the persona, rules, and report format), the one matching `agent-modes/<mode>.md`, and `spec-template.md` (the section structure). Read them only at write time, not during pre-flight, so they don't sit in context through the whole interview.
+- **Bundled files** live at paths relative to this skill's folder; read each only when Execution says (the write time files only at write time).
 - **No interactive question support?** Use whatever your agent provides (an options picker) and fall back only where missing: ask the question rounds as plain text with the same options.
 
 ## Execution
@@ -103,20 +101,18 @@ Wait for the answer; use it as the design topic before pre-flight.
 Run these steps (the `git` commands are literal; everything else uses your agent's file tools):
 
 - **Freshness (teams):** `git fetch` quietly, pick the base branch (`main` if `git rev-parse --verify main` succeeds, else `master`), count commits behind with `git rev-list --count HEAD..origin/<base>`. If >0, warn "pull first" before deciding (a teammate may have added specs or changed this feature).
-- **Resolve the spec location** (`SPEC_DIR`) = the scope workspace mirrored into `docs/specs/`: single repo → `docs/specs/`; monorepo workspace → `docs/specs/<workspace>/`; repo wide → `docs/specs/_root/`. Determine `<workspace>` as the scope does (topic/path/scope row). Create the directory if missing.
+- **Resolve `$SPEC_DIR`** per *Artifact ownership* (determine `<workspace>` as the scope does: topic/path/scope row). Create the directory if missing.
 - **Today's date**: use today's date (inject it into the spec).
 - **List existing specs in this location**: files named `NNNN-*.md` plus any `index.md` in `$SPEC_DIR`, for numbering (per location) and related decision detection.
 - **Count source files** (e.g. `.ts`, `.tsx`, `.js`, `.py`, `.go`, `.rs`, `.java`), excluding `node_modules/`, `.git/`, `dist/`. Informs how much code there is to read, and whether to offload that reading to a `scout` subagent.
 - **Read project context**, the source of truth for the stack and community skills: root `AGENTS.md` (fall back to `CLAUDE.md`, else MISSING), plus the nested `<area>/AGENTS.md` for this feature's area if one exists (e.g. `src/auth/AGENTS.md` for an auth feature).
-- **Read the build approach for THIS feature**: the delivery strategy that governs how the spec's `## Build plan` is ordered and sliced. Precedence: this feature's scope row `Approach` override if declared, else the project default (root `AGENTS.md` first, else the scope header in `docs/scope/`). A feature with its own approach is built by ITS approach; others use the project default. The four imply materially different `## Build plan` orderings, not the same order relabeled: **Tracer Bullet** stands up a thin end to end thread through every layer first, then thickens; **Skateboard** builds the thinnest usable whole first, then grows; **Facade** leads with the UI shell on placeholder data and defers the migration (a prototype path); **Journey** completes one user path's tasks fully before the next. A project specific variant is possible. If neither records one, note the assumption and set the default by Staff/Principal judgment (prefer end to end Tracer Bullet slices for production work). Let the recorded approach visibly shape the ordering.
+- **Read the build approach for THIS feature**: the delivery strategy that governs how the spec's `## Build plan` is ordered and sliced. Precedence: this feature's scope row `Approach` override if declared, else the project default (root `AGENTS.md` first, else the scope header in `docs/scope/`). The four imply materially different `## Build plan` orderings, not the same order relabeled: **Tracer Bullet** stands up a thin end to end thread through every layer first, then thickens; **Skateboard** builds the thinnest usable whole first, then grows; **Facade** leads with the UI shell on placeholder data and defers the migration (a prototype path); **Journey** completes one user path's tasks fully before the next. A project specific variant is possible. If neither records one, note the assumption and set the default by Staff/Principal judgment (prefer end to end Tracer Bullet slices for production work).
 - **Locate the linked scope feature (if any):** cheaply scan `docs/scope/` filenames/headings (including per workspace subdirs) for a feature matching this topic; open only the single scope file containing it (`scope.md`, or the matching `<epic>.md` in a split). If found, read that row's intent plus any acceptance criteria seeds (they seed Stage (a)) and remember the file/row for the derive tasks and linking steps; this also settles feature linked vs standalone status. If no row matches, note the standalone decision path and don't create one now.
 - **(Optional)** list installed skills dirs for availability only (`.claude/skills/`, `.agents/skills/`, `skills/`). Relevance is decided by AGENTS.md plus the feature, not name matching.
 
 From the spec list (paths relative to `$SPEC_DIR`):
 - **Next number**: highest existing + 1, zero padded to 4 digits; `0001` if none (an umbrella directory counts as one number). Collision guard (teams): list again `$SPEC_DIR` immediately before you write; if the chosen `NNNN` exists, bump to the next free number. Never overwrite an existing spec; after writing, confirm no concurrent run took the same number.
-- **Filename / shape**: `kebab-case` slug from the topic, max 5 words, no articles, lowercase.
-  - Simple decision → `$SPEC_DIR/NNNN-kebab-title.md`.
-  - Umbrella (splits into ≥2 related sub decisions) → directory `$SPEC_DIR/NNNN-kebab-title/` with `index.md` (the umbrella decision listing its children), `rationale.md` (the reasoning + any inventories/audits), and child specs `NNNN-child.md` inside it. Decide from the topic's breadth before you write, and hold the shape in mind as you write.
+- **Filename / shape**: `kebab-case` slug from the topic, max 5 words, no articles, lowercase; shape per *Artifact ownership* (umbrella when it splits into ≥2 related sub decisions), decided from the topic's breadth before you write.
 - **Related specs**: go in two passes so this stays cheap as specs accumulate. First read only the title line of each existing spec (cheap even at dozens of them); then read the first 20 lines (title, status, opening of Context) of just the few whose title plausibly overlaps this topic, to confirm. Flag matches.
 - **Child of umbrella detection**: if the topic is a sub decision of an existing umbrella (`$SPEC_DIR/NNNN-<umbrella>/`), e.g. one that surfaced while building under it, place the new spec inside that directory as the next child (`NNNN-child.md`) and add it to the umbrella's `index.md` list, not a new top level spec. Same path when `/develop` hits a decision partway through a build. Tell the engineer where it's going.
 - **Update/supersede detection**: if an existing spec clearly overlaps the topic (same domain, system, decision), before the staged conversation present a decision panel (plain text options where the agent has no picker; the picker adds Other automatically): "I found an existing spec that may overlap: `[path]`, [title]. How should I treat this?", options: **New decision (create a new spec)** · **Update the existing spec in place** · **Supersede it (a new spec replaces it)**. Default to the "(recommended)" option by overlap strength (nearly identical → Update or Supersede; adjacent → New). On update/supersede: set OPERATION, read the existing spec in full, and skip the staged conversation for in place updates.
@@ -139,7 +135,7 @@ For create or supersede operations, this is a hard gate: **read `internal/design
 
 ### Write the spec (main thread)
 
-After the staged conversation, you write the spec yourself. Do not spawn anyone to draft, research, or critique it. Resolve this skill's folder to an absolute path (you already resolve these relative paths, so you know the folder) and Read three files now (only now, so they don't sit in context through the interview): `agent-prompt.md`, `spec-template.md`, and the one mode file matching the inferred MODE:
+After the staged conversation, you write the spec yourself. Do not spawn anyone to draft, research, or critique it. Read three files now (only now, so they don't sit in context through the interview): `agent-prompt.md`, `spec-template.md`, and the one mode file matching the inferred MODE:
 - `FEATURE` → `agent-modes/feature.md`
 - `ARCHITECTURE` → `agent-modes/architecture.md`
 - `ENHANCEMENT` → `agent-modes/enhancement.md`
@@ -151,8 +147,6 @@ Then write the spec, applying:
 
 **References and links: reuse the Stage (c) `REFERENCES_LEVEL`; do not fetch now.** Write the `## References` section and `(basis: ...)` citations at that level, per *On sourcing & citations* in `agent-prompt.md`. The Stage (c) checks ran once; reuse only the links they confirmed, and cite any unverified source by name with no URL. Only if Stage (c) never ran (e.g. the documentation path), present the References consent panel now (recommended pick `No references, keep it clean`) and set `REFERENCES_LEVEL` to `none` or `sources` (`sources+links` is not offered, no fetch is available at write time).
 
-The inferred MODE (from Framing) is already one of `FEATURE` / `ARCHITECTURE` / `ENHANCEMENT` / `CROSS-CUTTING`.
-
 The inputs to apply (you already have them from the design conversation and pre-flight):
 1. Design topic (from the user's original message)
 2. The inferred framing: MODE, platform (web/mobile/API), stack & conventions (from `AGENTS.md`), and any constraints/compliance inferred or confirmed
@@ -163,7 +157,7 @@ The inputs to apply (you already have them from the design conversation and pre-
 4. Context file contents: `AGENTS.md` (root + the feature area's nested), or `CLAUDE.md` as fallback, or "MISSING"
 5. Existing spec list (filenames + first line of each)
 6. Related spec paths (flagged in pre-flight)
-7. The resolved spec location (`$SPEC_DIR`), next number, and shape: a single file `$SPEC_DIR/NNNN-title.md`, or a directory `$SPEC_DIR/NNNN-title/` (`index.md` + `rationale.md`, plus child specs for an umbrella). Umbrella: write the named child decisions; any inventory/audit goes in `rationale.md`, never in `docs/scope/`, never loose in the code tree. Only the `index.md` carries a `**Status**:` line (it mirrors the feature); child specs omit the lifecycle Status (spec content governed by the umbrella)
+7. The resolved `$SPEC_DIR`, next number, and shape. Umbrella: write the named child decisions; any inventory/audit goes in `rationale.md`, never in `docs/scope/` or the code tree. Only `index.md` carries a `**Status**:` line; child specs omit it
 8. Source file count (whether there's code to read; for a large ENHANCEMENT/CROSS-CUTTING codebase, offload the reading to a `scout` subagent per *Subagents* and write from its map)
 9. Operation: `create` | `update` | `supersede`
 10. Today's date (from pre-flight)
@@ -188,18 +182,16 @@ If the task is to update or supersede an existing spec:
 
 When the topic resolves to an existing `Assumed` spec (the engineer built first via `/develop`'s escape hatch and is now ratifying, often phrased `/architect <feature>: ratify …`), pre-flight will find that spec. Read it in full: its `## Owed decision`, `## Assumption built on`, and `## Code area` tell you what was decided provisionally and where the code lives. Then run the normal design conversation, anchored to what was actually built, and deliberate the decision properly. Two outcomes:
 
-- **The assumption holds.** Fill in the real decision content (Context, Options considered, Decision, Rationale, the design section, Consequences) so the spec becomes a genuine deliberated record, and clear `Assumed`: set the `**Status**:` line to the feature's lifecycle state (`In Progress` if the feature is built but not yet `done`, `Accepted` if it is already verified and tested). `/develop` then closes it to `Accepted` at `done` as usual. The decision is no longer ephemeral.
+- **The assumption holds.** Fill in the real decision content (Context, Options considered, Decision, Rationale, the design section, Consequences) so the spec becomes a genuine deliberated record, and clear `Assumed`: set the `**Status**:` line to the feature's lifecycle state (`In Progress` if the feature is built but not yet `done`, `Accepted` if it is already verified and tested). `/develop` then closes it to `Accepted` at `done` as usual.
 - **The assumption was wrong.** Write a corrected spec (`create` or `supersede`) with the real decision, mark the assumed spec `Superseded by [NNNN](…)`, and tell the engineer the build rests on a wrong assumption and should be redone against the corrected spec.
 
-Either way, ratification is why an `Assumed` spec can leave that state: `/develop` records the assumption, `/architect` confirms or corrects it and supplies the reasoning. Do not leave a spec `Assumed` after a ratify run.
+Never leave a spec `Assumed` after a ratify run.
 
 ---
 
 ## Reference files
 
-- Spec template: `spec-template.md` (the main thread reads it at write time)
-- Spec writing rules & persona: `agent-prompt.md` (the main thread reads it at write time)
-- Mode specific writing instructions: `agent-modes/*.md` (read only the matching mode file, at write time)
+- At write time: `spec-template.md`, `agent-prompt.md`, the matching `agent-modes/*.md`
 - Main thread design conversation: `internal/design-conversation.md` (read only for create/supersede)
 - Agent Skill & MCP offer: `internal/tool-discovery.md` (read only when the stack walk settles a new tool; it asks before it searches, and the registry fetch then runs in a `researcher` subagent)
 - Main thread completion flow: `internal/after-subagent.md` (read only after the spec is written)

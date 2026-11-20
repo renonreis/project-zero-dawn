@@ -1,10 +1,10 @@
 # /develop: UI track guide
 
-UI build track for `/develop`, read after the spec gate (`SKILL.md` Step 0) classifies a task as UI: components, screens, or full layouts, built to a professional bar with real design tokens and strict accessibility. Any UI platform (web, mobile, desktop): detect the platform and the UI, styling, theming, navigation, and accessibility systems the project already uses, and build with their native idioms. The bar and the phases below are the same on every platform; only the mechanics differ, and you build them the platform's way. The project's `design.md` holds the art direction (character, the build mandate, composition and component rules, and pointers to where the real tokens live); the token values themselves live in the project's own styling or theme system (CSS on web, the platform theme on mobile), never duplicated in `design.md`. Read the bar below before you build anything.
+UI build track for `/develop` (components, screens, layouts), on any UI platform: the bar and phases are the same everywhere, built with the platform's native idioms. The project's `design.md` holds the art direction (character, build mandate, composition and component rules, pointers to the tokens); token values live in the project's styling or theme system, never duplicated in `design.md`.
 
 ## The bar: read this first, it is the definition of done
 
-You are a senior product designer shipping a real product, not a developer wiring a form. Every UI page must leave as a complete, professional product surface, the quality you would expect from a top product or from Claude's own chat app, never a bare minimum stub. This is not optional styling advice. It is the definition of done for a UI build.
+You are a senior product designer shipping a real product, not a developer wiring a form. Every UI page must leave as a complete, professional product surface, the quality you would expect from a top product or from Claude's own chat app, never a bare minimum stub.
 
 **Design first, then integrate.** Build in two passes, so the codebase's constraints (tokens, libraries, accessibility) don't crush the design before it exists:
 1. **Design the surface** (bold, complete, opinionated), as if you were shipping it standalone, to the agreed design system. Compose the whole page (`ui/implementation.md` Phase 0).
@@ -22,14 +22,12 @@ You are a senior product designer shipping a real product, not a developer wirin
 
 ## Design source (route by what you were given)
 
-1. **Design tool connected (the spec says use it; Paper by default, Figma also works)** → pull the real design from it, build to the frames. Route: `ui/mcp.md`.
+1. **Design MCP selected in the spec or by the engineer (Paper by default, Figma also works)** → pull the real design from it, build to the frames. Route: `ui/mcp.md`.
 2. **Image provided (pasted in chat, not a repo file)** → replicate it pixel perfect. The image is both the look and the composition, so match it faithfully and do NOT embellish beyond it. Tokenize what you see (values into CSS, character into `design.md`) and derive the responsive and accessible behavior a single screenshot cannot show. Route: `ui/image.md`.
 3. **A design system already exists** (`design.md` + tokens in CSS) → design the new page WITHIN that system, at the bar above: a full professional surface, consistent with what is already shipped. Route: `ui/existing.md`.
 4. **Nothing provided** → establish the design system first (the `frontend-design` skill when available, else derive it from the rules in `ui/generate.md` B2 and verify its contrast), record it in `design.md` (character + mandate + pointers) with the tokens written to CSS, then build to the bar above, maximalist and complete. Route: `ui/generate.md`.
 
 Cases 3 and 4 get the full chat app treatment (bold, complete, product level); case 2 gets faithful fidelity; case 1 gets design tool fidelity. Follow the source the spec recorded.
-
-All paths converge on: component or screen → detect the platform and its systems → token sync → the implementation phases.
 
 ## How the UI build fits the project's approach
 
@@ -39,7 +37,7 @@ The UI build serves the project's build approach (read in `SKILL.md` Step 2), ne
 
 ## Portability (any OS, any agent)
 
-Any Agent Skills client, macOS/Linux/Windows. Detection snippets (`find`, `cat | grep`, `cp`) are POSIX reference: use your agent's own cross platform file tools. Bundled files (`checklist.md`, `ui/*.md`) are paths relative to this skill's folder, read on demand: read this guide's phases as reached, not all up front. The UI build runs inline (it is interactive); heavy code exploration (finding existing components/tokens to match) goes to a read only subagent per `SKILL.md` Step 2.5. No interactive question picker: ask the prompts as plain text with the same options.
+Detection snippets are POSIX reference; use your agent's cross platform file tools. Read bundled files on demand, as reached. The UI build runs inline; heavy code exploration goes to the `SKILL.md` Step 2.5 subagent. No picker: ask the prompts as plain text with the same options.
 
 ## Step 0: Where the design comes from (one decision, made once)
 
@@ -123,14 +121,7 @@ Nothing installed yet for one of these: pick the platform's conventional, curren
 
 ## Step 1: Load the selected UI path
 
-Based on the checks above, read exactly one source file:
-
-- `ui/mcp.md` when Figma or another design MCP is the source.
-- `ui/image.md` when a screenshot or image is the source.
-- `ui/existing.md` when an existing `design.md` or current UI is the source.
-- `ui/generate.md` when there is no source: it finds a direction, then derives and verifies the system.
-
-After the selected source has resolved tokens, assets, and design direction, read `ui/implementation.md` and follow it through the implementation phases and report. Do not read the other source files unless the source changes.
+Read exactly one source route per *Design source* above (`ui/existing.md` for an existing `design.md` or current UI); read another only if the source changes. Once it has resolved tokens, assets, and design direction, read `ui/implementation.md` and follow its phases and report.
 
 ## Reference files
 
