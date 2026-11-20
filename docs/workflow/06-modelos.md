@@ -1,45 +1,43 @@
 # 06. Modelos
 
-> **Status: rascunho.** A atribuição final de modelo por skill é uma decisão pendente (feature 6 do [scope](../scope/scope.md)), a ser tomada juntos e validada com uso real.
+> **Status: decidido** na [spec 0002](../specs/0002-model-routing.md) (feature 6 do [scope](../scope/scope.md)). A spec é o contrato; esta página explica para humanos.
 
-## O que está disponível hoje (via T3 Code, levantado em 20/11/2026)
+## Provedores em uso (levantado em 20/11/2026)
 
-| Provedor (T3) | Conta | Modelos relevantes |
+| Provedor (T3) | Conta | Modelos usados |
 |---|---|---|
-| Claude (`claudeAgent`) | Claude Pro | Opus 5.5, Sonnet 5.5, Fable 5.2, Haiku 5.5 |
-| GitHub Copilot (`acpRegistry_github_copilot`) | Copilot | GPT‑6.2 Sol, GPT‑6.2 Astra, Claude Sonnet/Opus/Haiku 5.x e mais ~18 no catálogo |
-| Antigravity (`antigravity`) | Gemini | Gemini 3.8 Flash, GPT‑OSS 120B, Claude 4.6 |
+| Claude (`claudeAgent`) | Claude Pro | Opus 5.5, Sonnet 5.5, Haiku 5.5 |
+| Antigravity (`antigravity`) | Gemini | Gemini 3.8 Flash (não há Pro), GPT‑OSS 120B, Claude Opus/Sonnet 4.6 |
 
-Rode `orchestrator_capabilities` (com `search`) para ver o catálogo completo; ele muda.
+**GitHub Copilot foi descartado** (20/11/2026): a cota mensal acabou no meio do trabalho, e dois provedores são mais simples de controlar. Rode `orchestrator_capabilities` para ver o catálogo atual; se um modelo da tabela sumir, emende a spec 0002, não improvise.
 
-## Princípios de roteamento
+## Princípios
 
-1. **Julgamento caro, execução barata.** Decisões (`/architect`, `/debug` difícil) no modelo mais forte; leitura e varredura (`scout`) no mais barato.
-2. **Revisão sempre em outra família.** Crítica de spec e `/check review` nunca no mesmo modelo que escreveu. Preferência: GPT no Copilot, depois Gemini no Antigravity, por último outro Claude.
-3. **Poupe a cota do Claude Pro** para o trabalho interativo e de construção; mande para Copilot/Antigravity o que roda sozinho e tem saída verificável.
-4. **Esforço antes de trocar de modelo.** Às vezes subir o `effort` resolve melhor que trocar de modelo.
+1. **Claude Pro escreve.** Specs, código, testes: tudo sai de um modelo Claude. Opus para julgamento (`/scope`, `/architect`, `/debug`), Sonnet para construir (`/develop`, `/test`, `/check verify`, `/audit`, `/sync`).
+2. **Antigravity revisa e redige.** Crítica de spec e `/check review` no Gemini 3.8 Flash (depois GPT‑OSS 120B); `/document` no Gemini 3.8 Flash. Como quem escreve é Claude, a revisão é independente por construção.
+3. **Reserva no Antigravity.** Se a cota do Pro acabar, o trabalho cai para o Claude 4.6 do Antigravity (uma geração atrás: espere mais rodadas de correção).
 
-## Proposta inicial por skill (hipótese)
+## Tabela
 
-| Skill | Principal | Subagentes / delegação | Por quê |
-|---|---|---|---|
-| `/scope` | Claude Opus | `researcher`: Sonnet | Julgamento de produto, conversa interativa |
-| `/audit` | Claude Sonnet | `scout`: Haiku | Leitura ampla, pouca decisão |
-| `/architect` | Claude Opus | crítica: **GPT‑6.2 Sol (Copilot)** | Decisões carregadoras de peso + olhar independente |
-| `/develop` | Claude Sonnet (Opus em backend crítico) | `scout`: Haiku | Construção longa, custo importa |
-| `/check verify` | Claude Sonnet | (navegador/preview) | Dirigir o app e comparar com ACs |
-| `/check review` | **GPT‑6.2 Sol (Copilot)**, alternativa Gemini | – | Família diferente do autor |
-| `/test` | Copilot (Sonnet ou GPT) | – | Saída verificável (testes passam), poupa cota |
-| `/document` | Gemini Flash ou Haiku | – | Texto a partir do diff, barato |
-| `/sync` | Claude Sonnet | – | Edições cirúrgicas com contexto do repo |
-| `/debug` | Claude Opus | `scout`: Haiku | Raciocínio de causa raiz |
+| Skill | Onde roda | Reserva |
+|---|---|---|
+| `/scope`, `/architect`, `/debug` | Claude Pro · Opus 5.5 | Antigravity · Claude Opus 4.6 |
+| `/develop`, `/test`, `/check verify` | Claude Pro · Sonnet 5.5 | Antigravity · Claude Sonnet 4.6 |
+| `/develop` escalado | Claude Pro · Opus 5.5 | Antigravity · Claude Opus 4.6 |
+| `/audit`, `/sync` | Claude Pro · Sonnet 5.5 | Antigravity · Claude Sonnet 4.6 |
+| crítica do `/architect`, `/check review` | Antigravity · Gemini 3.8 Flash | GPT‑OSS 120B, por último outro Claude (avisando que não foi independente) |
+| `/document` | Antigravity · Gemini 3.8 Flash | Claude Pro · Haiku 5.5 |
+| `scout`, `researcher` | Haiku (frontmatter do agente) | modelo da sessão fora do Claude Code |
 
-## Como validar (experimento sugerido)
+**Quando o `/develop` sobe para Opus:** a spec é crítica (auth/permissões, integridade de dados, pagamentos, migração; na dúvida pergunta uma vez) ou houve dois relatórios seguidos de `/check verify` com falha em `docs/reviews/` na mesma feature.
 
-"Três revisores, uma feature": numa feature real do design system, rodar `/check review` em GPT‑6.2 Sol, Gemini e Claude Sonnet; comparar achados (quantos reais, quantos ruído) e custo. O resultado vira a spec de roteamento.
+## Como é aplicado
 
-## O que já está ligado nas skills
+- A GAIA lê a tabela quando lança ou delega uma thread no T3. O resumo e o link da spec estão em `global/RULES.md`, que todo provedor carrega.
+- Reserva sem perguntar: se o provedor está desligado ou a execução falha por cota, limite ou indisponibilidade, a GAIA passa para a próxima opção e diz qual usou.
+- Modelo errado: a skill avisa uma vez por thread (só se souber o modelo por fonte confiável) e oferece relançar. Não bloqueia.
+- Nenhum `SKILL.md` tem `model:`; esse campo só funciona no Claude Code.
 
-- `/check review` e a crítica do `/architect` tentam primeiro **outro provedor via `delegate_task`**, e caem para outro modelo Claude se a delegação não estiver disponível.
-- O subagente `scout` fixa o modelo rápido (Haiku).
-- O resto herda o modelo da sessão até a decisão desta página virar spec.
+## Evidência e próximo passo
+
+GPT‑6.2 Sol fez cinco cross checks com achados reais antes do Copilot sair. O cross check desta própria spec rodou no Gemini 3.8 Flash e trouxe 13 achados, 9 aplicados: primeira evidência a favor do Gemini como revisor. Próximo passo: no próximo `/check review` do piloto, comparar Gemini Flash e GPT‑OSS 120B uma vez e registrar na spec 0002.
