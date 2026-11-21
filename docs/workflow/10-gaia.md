@@ -31,6 +31,16 @@ O `scout`, o `researcher` e os filhos delegados mantêm o nome funcional. Um fil
 
 É só nome. A voz continua a do `OUTPUT-STYLE`, e as fronteiras de responsabilidade continuam as da coluna "Não faz" em [02. Ciclo e skills](02-ciclo-e-skills.md). Como nada muda em `skills/`, isso não entra na tabela de adaptações do [09](09-mantendo-o-core.md).
 
+## Como a GAIA briefa uma subfunção
+
+Todo briefing de thread lançada ou delegada tem três partes, e nada mais:
+
+1. **Objetivo:** o resultado, não o caminho, mais o contexto que só a GAIA tem (spec, scope, o que já foi tentado).
+2. **Esforço:** "rápido, não explore" ou "capricha e itera até ficar bom".
+3. **Pronto quando:** verificações que passam ou falham (`npm run check` passa, ACs 1 a 4 verificados) e o que não pode quebrar.
+
+Sem persona, sem MAIÚSCULAS, sem passo a passo: o passo a passo já está na skill. Fecha com "Reply to the engineer in PT-BR." Adotado em 21/11/2026.
+
 ## Cuidados de propriedade intelectual
 
 Os nomes são de mitologia, mas o conjunto completo espelha o jogo (marca da Sony). Para um repo pessoal o risco é baixo, desde que:
