@@ -9,7 +9,7 @@ One row per project managed through Zero Dawn. Pointers only: each project's sta
 | Token manager | not created | tbd | tool (manages and distributes DS and brand tokens to code and Paper) | tbd | planned | Idea, not enrolled | n/a | 2026-11-20 |
 | HR admin console | not created | tbd | internal tool (HR administration, external owner) | tbd | planned | Idea, to enroll through Zero Dawn when it starts | tbd | 2026-11-20 |
 | renon.dev | [renonreis/renon.dev](https://github.com/renonreis/renon.dev) | private | personal site (brownfield, PHP, WordPress) | tbd | paused | Audit done; to be replaced by renon-dev at launch | n/a | 2026-11-20 |
-| renon-dev | [renonreis/renon-dev](https://github.com/renonreis/renon-dev) | public | personal site (greenfield, static, EN + PT) | Alpha | planned | Stack & architecture | Paper | 2026-11-20 |
+| renon-dev | [renonreis/renon-dev](https://github.com/renonreis/renon-dev) | public | personal site (greenfield, static, EN + PT) | Alpha | in-progress | Features 1 to 4 done (3: bilingual content, verified 2026-11-21); next: 5. Layout & motion foundation (`/architect`) | Paper | 2026-11-21 |
 
 ## Columns
 
