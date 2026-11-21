@@ -22,6 +22,10 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 8 | Plugin or marketplace distribution | Deferred | planned |
 | 9 | GAIA persona and agent naming | Slice 1 | in-progress |
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
+| 11 | Risk gate (porteiro) | Slice 2 | planned |
+| 12 | Evidence based setup pruning | Slice 2 | planned |
+| 13 | Scheduled loops (nightly security, weekly retro) | Slice 2 | planned |
+| 14 | Change size axis | Deferred | planned |
 
 ## Foundations
 
@@ -81,7 +85,33 @@ Naming layer only: the main session is GAIA and each skill runs as one of her ni
 - [x] Glossary doc and `global/RULES.md` line
 - [ ] Try on the pilot (delegated thread titles, session intro), then keep, adjust, or drop
 
+## Slice 2: factory adoptions
+
+Adopted 2026-11-21 from the AI Builders "Factory Starter" and "Prompts simples" kits (local reference only, `assets/kit-*/`, gitignored). Already applied: evidence claims and `Not tested` / `Needs your OK` report sections, three round review cap (A10), goal, effort, done when briefings.
+
+### 11. Risk gate (porteiro) · planned
+A deterministic, non AI gate that checks every commit of a branch against a risk file: secrets block with no override; workflow rules, auth, billing, and migrations need a recorded engineer OK. Runs in `/sync` before merge under `autonomy: full`, plus pre push hook and CI.
+**Done when:** a spec records the design, the gate ships in Zero Dawn, and one pilot project runs it before a real merge.
+- [ ] Decide design, runtime (Bun or Node), and approval record: `/architect risk gate` (spec 0003)
+- [ ] Build and wire into `/sync`
+- [ ] Run on the pilot
+
+### 12. Evidence based setup pruning · planned
+On every major model jump, remove the setup, run 2 or 3 real tasks bare, and restore only what was missed, one rule at a time. Safety rules and permissions never leave. Complements the byte budgets in `npm run check`.
+**Done when:** the ritual is documented in `docs/workflow/09-mantendo-o-core.md` and ran once on the current model.
+- [ ] Document the ritual
+- [ ] First run on Opus 5.5 (include persona lines inherited from upstream)
+
+### 13. Scheduled loops · planned
+Nightly security review of what merged in the last 24 hours (report only) for projects in production, and a weekly Zero Dawn retro over the registry (what the gate blocked, failed verifies, review blockers) proposing at most 3 adjustments.
+**Done when:** both run as scheduled tasks and produced one report each.
+- [ ] Nightly security loop prompt and schedule
+- [ ] Weekly retro prompt and schedule
+
 ## Deferred
+
+### 14. Change size axis
+Small, normal, large change sizes as a second axis beside the rigor tier ("if the gate finds a risk area, the change was not small"). Revisit after feature 11.
 
 ### 8. Plugin or marketplace distribution
 Package skills as a Claude Code plugin for versioned installs on other machines. Evaluate together after the pilot.

@@ -25,6 +25,8 @@ Isso é ligado por projeto no bloco `## Git` do `AGENTS.md`:
 
 Autonomia não é silêncio. Toda ação com efeito fora da máquina (repo criado, push, PR aberto, merge, issue) é **anunciada quando acontece** e **listada no fim da resposta**, com link, junto com **o que agora depende de você** para o fluxo continuar.
 
+Todo relatório de trabalho só afirma "funciona", "testei" ou "corrigi" com a prova do lado (saída do teste, captura de tela) e termina com duas seções, mesmo vazias: **Não testado** (com o motivo) e **Precisa do seu OK**.
+
 ## O que sempre pede o seu ok
 
 - **Deploy** ou release para qualquer ambiente.
