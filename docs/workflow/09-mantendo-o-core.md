@@ -38,6 +38,8 @@ git diff 42d85b8 -- skills agents
 | A8 | Monorepo de produto único (ex.: DS + Storybook) usa um scope só | `scope/modes/plan-monorepo.md`, `scope/scope-template.md` |
 | A9 | Poda dos hot paths abaixo de 90% do orçamento: regras repetidas viram ponteiro, justificativas saem. Ao portar do upstream, não reintroduza o texto cortado | `scope/*`, `develop/SKILL.md`, `develop/flow/build.md`, `develop/ui-guide.md`, `architect/SKILL.md`, `architect/agent-prompt.md`, `architect/internal/*`, `audit/SKILL.md` |
 
+| A10 | `/check review` para na terceira rodada com bloqueio aberto e devolve a decisão ao engenheiro | `check/modes/review.md` |
+
 Toda nova divergência entra nesta tabela.
 
 ## Trazendo melhorias do upstream

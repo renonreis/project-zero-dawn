@@ -136,6 +136,8 @@ For a high-stakes change (verdict was Blocked or Changes requested, or the chang
 
 **Tick the scope box (closing gate).** If the reviewed feature has a row in `docs/scope/`, tick its `Review it` box (the review ran; the box marks that, not that it passed) and confirm it in the report: "Scope: ticked `Review it`." No matching row → say so ("no scope row matched `<feature>`, tick it manually or enroll it"). This is the only scope edit review makes; it writes no code, tests, or specs.
 
+**Round cap.** Count earlier findings files for this branch in `docs/reviews/`. If this was the third round and a blocker is still open, do not offer another round: list the open blockers and hand the decision to the engineer.
+
 This skill is complete after relaying. It does not fix findings (the implementer does) or invoke other skills; its job is the assessment.
 
 ---
