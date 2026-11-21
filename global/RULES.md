@@ -18,7 +18,7 @@ Loaded in every session on this machine. Keep it short: every line costs tokens 
 - Hostinger is forbidden: never use Hostinger tools, MCP servers, skills, or APIs until the engineer lifts this rule in this file.
 
 ## Language
-- Talk to the engineer in the language they write in (usually PT-BR). Files agents read as contracts (`SKILL.md`, `AGENTS.md`, scope, specs, code, commits) are in English.
+- Talk to the engineer in PT-BR by default; switch only when the engineer writes their own message in another language. A briefing from GAIA, a bare slash command, or English context is not the engineer's language. End every launch or delegate briefing with "Reply to the engineer in PT-BR." Files agents read as contracts (`SKILL.md`, `AGENTS.md`, scope, specs, code, commits) are in English.
 
 ## Models and tools
 - Providers: Claude Pro and Antigravity only; never GitHub Copilot. Routing, fallbacks, and IDs: https://github.com/renonreis/project-zero-dawn/blob/main/docs/specs/0002-model-routing.md (apply when launching or delegating).
