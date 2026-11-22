@@ -22,7 +22,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 8 | Plugin or marketplace distribution | Deferred | planned |
 | 9 | GAIA persona and agent naming | Slice 1 | in-progress |
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
-| 11 | Risk gate (porteiro) | Slice 2 | planned |
+| 11 | Risk gate (porteiro) | Slice 2 | in-progress |
 | 12 | Evidence based setup pruning | Slice 2 | planned |
 | 13 | Scheduled loops (nightly security, weekly retro) | Slice 2 | planned |
 | 14 | Change size axis | Deferred | planned |
@@ -89,12 +89,17 @@ Naming layer only: the main session is GAIA and each skill runs as one of her ni
 
 Adopted 2026-11-21 from the AI Builders "Factory Starter" and "Prompts simples" kits (local reference only, `assets/kit-*/`, gitignored). Already applied: evidence claims and `Not tested` / `Needs your OK` report sections, three round review cap (A10), goal, effort, done when briefings.
 
-### 11. Risk gate (porteiro) · planned
-A deterministic, non AI gate that checks every commit of a branch against a risk file: secrets block with no override; workflow rules, auth, billing, and migrations need a recorded engineer OK. Runs in `/sync` before merge under `autonomy: full`, plus pre push hook and CI.
+### 11. Risk gate (porteiro) · in-progress
+A deterministic, non AI gate that checks every commit of a branch against a risk file: secrets block with no override; workflow rules, auth, billing, and migrations need a recorded engineer OK. Runs in `/sync` before merge under `autonomy: full`, plus a required GitHub Actions check. Spec: [0003](../specs/0003-risk-gate.md).
 **Done when:** a spec records the design, the gate ships in Zero Dawn, and one pilot project runs it before a real merge.
-- [ ] Decide design, runtime (Bun or Node), and approval record: `/architect risk gate` (spec 0003)
-- [ ] Build and wire into `/sync`
-- [ ] Run on the pilot
+- [x] Design it (spec)
+- [ ] Build it: /develop risk gate
+  - [ ] Gate script with built in secrets and workflow defaults, plus `node:test` suite (AC-1 to AC-7)
+  - [ ] Zero Dawn wiring: own risk file, CI workflow, installer link, `/sync` step and trailer rule (AC-8, AC-10, AC-12, AC-13)
+  - [ ] `zd-gate init` with remaining defaults and ruleset, `/audit` enrollment (AC-9, AC-11)
+  - [ ] Pilot run on Triquetra Design System (AC-8 to AC-10)
+- [ ] Verify it: /check verify risk gate
+- [ ] Test it: /test risk gate
 
 ### 12. Evidence based setup pruning · planned
 On every major model jump, remove the setup, run 2 or 3 real tasks bare, and restore only what was missed, one rule at a time. Safety rules and permissions never leave. Complements the byte budgets in `npm run check`.
