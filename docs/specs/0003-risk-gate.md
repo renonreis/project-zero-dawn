@@ -1,7 +1,7 @@
 # 0003. Risk gate: a deterministic merge check for guarded areas
 
 **Date**: 2026-11-21
-**Status**: Proposed
+**Status**: In Progress
 **Scope**: feature 11
 
 ## Summary
@@ -175,8 +175,8 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 
 Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then thicken.
 
-1. `scripts/zd-gate.mjs`: argument parsing, Node and repo checks, base resolution, per commit file and added line extraction, built in `secrets` and `workflow` defaults, area evaluation, trailer parsing, text and JSON output, exit codes, satisfies **AC-1**, **AC-2**, **AC-3**, **AC-4**, **AC-5**, **AC-6**, **AC-7**
-2. Tests with `node:test` that build throwaway git repos in a temp dir for each scenario above; `npm test` script, satisfies **AC-1** to **AC-7**
+1. [x] `scripts/zd-gate.mjs`: argument parsing, Node and repo checks, base resolution, per commit file and added line extraction, built in `secrets` and `workflow` defaults, area evaluation, trailer parsing, text and JSON output, exit codes, satisfies **AC-1**, **AC-2**, **AC-3**, **AC-4**, **AC-5**, **AC-6**, **AC-7**
+2. [x] Tests with `node:test` that build throwaway git repos in a temp dir for each scenario above; `npm test` script, satisfies **AC-1** to **AC-7**
 3. Zero Dawn's own `.zd/risk.json` and `.github/workflows/zd-gate.yml` (gate run from the checkout itself here), satisfies **AC-10**, **AC-12**
 4. Installer: link `~/.local/bin/zd-gate`, unlink on `--uninstall`, satisfies **AC-13**
 5. `/sync` step 3.5 and `global/RULES.md` trailer rule (only after an explicit yes, engineer's name), keeping `npm run check` budgets under 90%, satisfies **AC-8**
