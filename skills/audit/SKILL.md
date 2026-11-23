@@ -95,4 +95,6 @@ Don't guess. Ask once via your agent's interactive option picker (`AskUserQuesti
 
 ### After all phases
 
+**Risk gate enrollment.** When the `## Git` block says `integration: on` and the `zd-gate` command exists, run `zd-gate init` at the repo root (under `autonomy: confirm`, or on a repo another person owns, ask first) and relay its lines in the report. It never overwrites an existing risk file.
+
 If no `AGENTS.md` was written when it should have been (the file is missing/empty), report the failure and do it again; don't relay success it didn't produce. Otherwise relay the report: what was discovered (2 to 4 bullets), what was written (file paths), what was proposed or skipped (if existing files were found).

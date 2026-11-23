@@ -180,8 +180,8 @@ Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then
 3. [x] Zero Dawn's own `.zd/risk.json` and `.github/workflows/zd-gate.yml` (gate run from the checkout itself here), satisfies **AC-10**, **AC-12**
 4. [x] Installer: link `~/.local/bin/zd-gate`, unlink on `--uninstall`, satisfies **AC-13**
 5. [x] `/sync` step 3.5 and `global/RULES.md` trailer rule (only after an explicit yes, engineer's name), keeping `npm run check` budgets under 90%, satisfies **AC-8**
-6. Remaining defaults (`auth`, `billing`, `prod-db`) and `zd-gate init` (risk file, pinned CI workflow, required check with skip reasons), satisfies **AC-9**, **AC-10**
-7. `/audit` enrollment calls `zd-gate init`, satisfies **AC-11**
+6. [x] Remaining defaults (`auth`, `billing`, `prod-db`) and `zd-gate init` (risk file, pinned CI workflow, required check with skip reasons), satisfies **AC-9**, **AC-10**
+7. [x] `/audit` enrollment calls `zd-gate init`, satisfies **AC-11**
 8. Pilot: run `init` on Triquetra Design System and merge one real PR through it, satisfies **AC-8**, **AC-9**, **AC-10**
 
 ## Consequences

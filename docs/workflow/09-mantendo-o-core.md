@@ -39,6 +39,7 @@ git diff 42d85b8 -- skills agents
 | A9 | Poda dos hot paths abaixo de 90% do orçamento: regras repetidas viram ponteiro, justificativas saem. Ao portar do upstream, não reintroduza o texto cortado | `scope/*`, `develop/SKILL.md`, `develop/flow/build.md`, `develop/ui-guide.md`, `architect/SKILL.md`, `architect/agent-prompt.md`, `architect/internal/*`, `audit/SKILL.md` |
 
 | A10 | `/check review` para na terceira rodada com bloqueio aberto e devolve a decisão ao engenheiro | `check/modes/review.md` |
+| A11 | Porteiro `zd-gate` (spec 0003): `/sync` roda antes de todo merge e só grava o trailer de aprovação depois do sim do engenheiro; `/audit` chama `zd-gate init` ao registrar um projeto | `sync/SKILL.md`, `audit/SKILL.md` |
 
 Toda nova divergência entra nesta tabela.
 

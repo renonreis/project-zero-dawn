@@ -275,3 +275,22 @@ test("a branch cannot loosen the rules that judge it: the base copy of the risk 
     assert.deepEqual(area(r, "workflow").findings.map((f) => f.file).sort(), [".zd/risk.json", "global/RULES.md"]);
   } finally { t.cleanup(); }
 });
+
+test("AC-9: init writes the risk file with the git user as approver and never overwrites", async () => {
+  const { init, INIT_AREAS } = await import("./zd-gate.mjs");
+  const { readFileSync } = await import("node:fs");
+  const t = repo();
+  try {
+    t.write(".github/workflows/zd-gate.yml", "# existing\n");
+    const logs = [];
+    init(t.dir, { protect: false, log: (l) => logs.push(l) });
+    const risk = JSON.parse(readFileSync(path.join(t.dir, ".zd/risk.json"), "utf8"));
+    assert.deepEqual(risk.approvers, ["Ada Tester"]);
+    assert.deepEqual(risk.areas.map((a) => a.id), INIT_AREAS.map((a) => a.id));
+    assert.equal(readFileSync(path.join(t.dir, ".github/workflows/zd-gate.yml"), "utf8"), "# existing\n");
+    t.write(".zd/risk.json", "{\"mine\":true}");
+    init(t.dir, { protect: false, log: (l) => logs.push(l) });
+    assert.equal(readFileSync(path.join(t.dir, ".zd/risk.json"), "utf8"), "{\"mine\":true}");
+    assert.ok(logs.some((l) => l.startsWith("Kept .zd/risk.json")));
+  } finally { t.cleanup(); }
+});
