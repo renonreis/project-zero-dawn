@@ -1,20 +1,12 @@
 # 0003. Risk gate: a deterministic merge check for guarded areas
 
 **Date**: 2026-11-21
-**Status**: Proposed
+**Status**: In Progress
 **Scope**: feature 11
 
 ## Summary
 
 Zero Dawn ships a small Node script, `zd-gate`, that reads every commit of a branch and checks it against a risk file. A leaked secret blocks the merge outright. A change to guarded areas (workflow rules, auth, billing, production database) stops until the engineer says yes, and that yes is recorded as a commit trailer (a `Key: value` line at the end of a commit message). It runs in `/sync` before every autonomous merge and as a required GitHub Actions check, so safety no longer depends on an agent remembering a rule.
-
-## Context
-
-Zero Dawn runs projects with `autonomy: full`: agents branch, commit, push, open PRs, and `/sync` merges once the tier's checks pass. Every safety rule today is prose (`global/RULES.md`, skill text, the cross model review). Prose can be forgotten, misread, or lost when context is compacted, and the review reads the final diff, not the history: a key pasted in one commit and deleted in the next is invisible to it but lives in git forever.
-
-The guarded surfaces are few and well known: secrets, the workflow's own rules (`AGENTS.md`, `CLAUDE.md`, `global/`, CI, the risk file itself), authentication, billing, and production migrations. Most changes touch none of them, so a check must cost nothing when nothing is touched and must be impossible for an agent to talk its way past when something is.
-
-Constraints: the engineer works alone (no second human reviewer exists, so GitHub's "require approval from another person" cannot work); providers are Claude Pro and Antigravity only; Zero Dawn already runs `npm run check` on Node with zero dependencies; managed repos are mixed public and private, and some belong to other owners (Central Administrativa). Prior art proved the shape: a non AI gate reading a risk file, per commit, with trailer approvals.
 
 ## Requirements
 
@@ -29,7 +21,7 @@ Constraints: the engineer works alone (no second human reviewer exists, so GitHu
 - **AC-3**: A commit touching an `approve` area with no valid approval makes `zd-gate` exit `1`, listing the area, the files, who may approve, and the exact approval command.
 - **AC-4**: A trailer `Risk-approved: <area id> (<name>)` counts only when `<name>` matches an approver of that area (case insensitive) and the trailer sits in the latest commit that touched the area or a later one. With every touched area approved and nothing blocked, `zd-gate` exits `0`.
 - **AC-5**: A path listed in an area's `except` never triggers that area, for path rules and content rules alike.
-- **AC-6**: With no `.zd/risk.json`, the built in defaults (secrets, workflow) apply and a warning recommends `zd-gate init`. An invalid risk file, a missing base ref, a non git folder, a shallow clone without the merge base, a git older than 2.36, or a Node without glob support makes `zd-gate` exit `3` with a plain message.
+- **AC-6**: The rules come from the base ref's `.zd/risk.json` when the base has one, so a branch cannot loosen the rules that judge it; the branch's own copy applies only when the base has none (first enrollment, with a warning). With no `.zd/risk.json` anywhere, the built in defaults (secrets, workflow) apply and a warning recommends `zd-gate init`. An invalid risk file, a missing base ref, a non git folder, a shallow clone without the merge base, a git older than 2.36, or a Node without glob support makes `zd-gate` exit `3` with a plain message.
 - **AC-7**: `zd-gate --json` prints the same result as JSON with the same exit code.
 - **AC-8**: `/sync` runs `zd-gate` before any merge. Exit `0`: merge as today. Exit `1`: stop, ask the engineer per area; after an explicit yes, write the trailer commit with the engineer's name, push, run the gate again, then merge. Exit `2`: stop, never merge, show the fix. Exit `3`: stop, never merge, show the error.
 - **AC-9**: `zd-gate init` writes `.zd/risk.json` (default areas, approver from `git config user.name`) and `.github/workflows/zd-gate.yml`, never overwriting an existing file. On a repo the engineer owns whose plan supports it, it sets the `zd-gate` check as required on the default branch; otherwise it says why it skipped.
@@ -38,69 +30,11 @@ Constraints: the engineer works alone (no second human reviewer exists, so GitHu
 - **AC-12**: Zero Dawn's own risk file guards `global/`, `scripts/`, `.zd/`, `.github/`, `AGENTS.md`, and `CLAUDE.md`, and does not guard `skills/`.
 - **AC-13**: `scripts/install.sh` links `zd-gate` into `~/.local/bin`; `--uninstall` removes that link.
 
-## Options considered
-
-### Option 1: Adopt an existing script as is (Bun, YAML, copied per project)
-
-Copy an existing script and YAML risk file into every repo and run it with Bun.
-
-**Pros**:
-- Already written and battle shaped; YAML allows comments.
-
-**Cons**:
-- Adds a second runtime on this machine and in every CI job.
-- Copies drift: a fix must be pasted into every repo.
-- Third party code that is not ours to redistribute in public repos; Portuguese keys break the English contract rule.
-
-### Option 2: Zero Dawn ships a Node gate with zero dependencies
-
-One script in Zero Dawn, linked as `zd-gate` by the installer; each project keeps only `.zd/risk.json`; CI fetches the script from the public Zero Dawn repo at a pinned commit.
-
-**Pros**:
-- Same runtime as `npm run check`; nothing to install per project.
-- One fix updates every project locally; CI upgrades are an explicit SHA bump.
-- Built in defaults protect a project before it is enrolled.
-
-**Cons**:
-- JSON has no comments, so each area carries a `why` field instead.
-- Needs Node 22 or newer for `path.matchesGlob`.
-- CI depends on the Zero Dawn repo staying public.
-
-### Option 3: GitHub native controls only
-
-Secret scanning push protection, CODEOWNERS, and branch protection.
-
-**Pros**:
-- No code to maintain; push protection stops many secrets before they land.
-
-**Cons**:
-- CODEOWNERS approval needs a second person; a solo engineer cannot approve their own PR.
-- No per area approval record and no view of deleted lines in history.
-- Push protection and rulesets are limited on private repos on the free plan.
-
-### Option 4: Keep prose rules only
-
-The status quo: `RULES.md`, skill text, and the review.
-
-**Pros**:
-- Zero work.
-
-**Cons**:
-- Exactly the failure mode this feature exists to remove: an autonomous agent can forget, and the review never sees deleted history.
-
 ## Decision
 
 **Chosen option**: Option 2: Zero Dawn ships a Node gate with zero dependencies.
 
 `scripts/zd-gate.mjs`, linked as `zd-gate`, checks every commit since the merge base against `.zd/risk.json` (or built in defaults); `/sync` and a required GitHub Actions check both run it, and approvals are `Risk-approved` trailers.
-
-## Rationale
-
-The forces are autonomy without a second human and a toolchain kept to one runtime. Option 2 is the only one that gives a deterministic stop inside the exact step that merges (`/sync`) and a check the agent cannot skip (required CI), while reusing what Zero Dawn already runs. Shipping from Zero Dawn mirrors how skills already reach every project by symlink, so the gate improves everywhere at once, and the pinned SHA keeps CI reproducible.
-
-Option 3 is a useful complement, not a substitute: its approval model assumes a team, and it cannot reason about areas or about history. Enabling secret scanning push protection where it is free stays a follow up. Option 1's runtime and drift costs buy nothing Option 2 lacks.
-
-Trailers beat PR comments because they live in history, work offline, exist before a PR does, and are readable by the same script in CI. Their weakness (anyone who can commit can write one) is bounded by three things: the risk file itself is a guarded area, `RULES.md` already forbids acting without the engineer's word, and the agent writes the trailer only after an explicit yes in the conversation, always in the engineer's name.
 
 ## Feature design
 
@@ -142,7 +76,7 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 | `zd-gate` | commit range | `git merge-base <base> HEAD` to `HEAD` |
 | `zd-gate` | files and added lines per commit | `git log --no-renames --name-only` and `git log -p --unified=0 --no-renames --diff-merges=remerge` over the range (merge commits show only what their conflict resolution added; needs git 2.36 or newer, else exit `3`) |
 | `zd-gate` | "still in final tree" | added lines of `git diff <merge-base>...HEAD` |
-| `zd-gate` | areas and approvers | `.zd/risk.json` (or `--risk`), else built in defaults |
+| `zd-gate` | areas and approvers | `--risk` if given; else `git show <base>:.zd/risk.json`; else the working tree `.zd/risk.json` (first enrollment, warned); else built in defaults |
 | `zd-gate` | approvals | `Risk-approved` trailers in commit bodies of the range |
 | `/sync` | the engineer's yes | the engineer's explicit answer in this conversation, per area; never inferred |
 | `/sync` | trailer name | the area approver equal (case insensitive) to `git config user.name`; if none matches, the engineer names one in the same question that asks for the OK |
@@ -158,7 +92,7 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 - `/sync` never merges on any exit other than `0`.
 - `init` never overwrites an existing risk file.
 
-**Security model**: the gate reads the local repo only; no network except `init` calling `gh`. Trailers are a record, not a cryptographic lock: locally, anyone who can commit can write one; the required CI check plus the guarded risk file and `RULES.md` bound that. Checking the trailer commit's author email was considered and rejected (agents commit under the engineer's identity, so it proves nothing), as was requiring a GitHub PR approval (a solo engineer cannot approve their own PR); instead the CI job summary lists every trailer approval so the engineer can spot one they never gave. Agents write a trailer only after the engineer's explicit yes in the current conversation, naming the engineer, never themselves. On a repo owned by someone else (or `autonomy: confirm`), `init` writes files only after asking and never changes branch protection. Secret findings print file and line, never the matched value.
+**Security model**: the gate reads the local repo only; no network except `init` calling `gh`. Trailers are a record, not a cryptographic lock: locally, anyone who can commit can write one; the required CI check plus the guarded risk file and `RULES.md` bound that. Checking the trailer commit's author email was considered and rejected (agents commit under the engineer's identity, so it proves nothing), as was requiring a GitHub PR approval (a solo engineer cannot approve their own PR); instead the CI job summary lists every trailer approval so the engineer can spot one they never gave. A branch is always judged by the base ref's rules, and in Zero Dawn CI by the base ref's copy of the gate script, so a PR cannot weaken the gate or drop an area to pass itself. Agents write a trailer only after the engineer's explicit yes in the current conversation, naming the engineer, never themselves. On a repo owned by someone else (or `autonomy: confirm`), `init` writes files only after asking and never changes branch protection. Secret findings print file and line, never the matched value.
 
 **Configuration required**: none (no env vars). CI needs read access to the public Zero Dawn repo.
 
@@ -175,13 +109,13 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 
 Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then thicken.
 
-1. `scripts/zd-gate.mjs`: argument parsing, Node and repo checks, base resolution, per commit file and added line extraction, built in `secrets` and `workflow` defaults, area evaluation, trailer parsing, text and JSON output, exit codes, satisfies **AC-1**, **AC-2**, **AC-3**, **AC-4**, **AC-5**, **AC-6**, **AC-7**
-2. Tests with `node:test` that build throwaway git repos in a temp dir for each scenario above; `npm test` script, satisfies **AC-1** to **AC-7**
-3. Zero Dawn's own `.zd/risk.json` and `.github/workflows/zd-gate.yml` (gate run from the checkout itself here), satisfies **AC-10**, **AC-12**
-4. Installer: link `~/.local/bin/zd-gate`, unlink on `--uninstall`, satisfies **AC-13**
-5. `/sync` step 3.5 and `global/RULES.md` trailer rule (only after an explicit yes, engineer's name), keeping `npm run check` budgets under 90%, satisfies **AC-8**
-6. Remaining defaults (`auth`, `billing`, `prod-db`) and `zd-gate init` (risk file, pinned CI workflow, required check with skip reasons), satisfies **AC-9**, **AC-10**
-7. `/audit` enrollment calls `zd-gate init`, satisfies **AC-11**
+1. [x] `scripts/zd-gate.mjs`: argument parsing, Node and repo checks, base resolution, per commit file and added line extraction, built in `secrets` and `workflow` defaults, area evaluation, trailer parsing, text and JSON output, exit codes, satisfies **AC-1**, **AC-2**, **AC-3**, **AC-4**, **AC-5**, **AC-6**, **AC-7**
+2. [x] Tests with `node:test` that build throwaway git repos in a temp dir for each scenario above; `npm test` script, satisfies **AC-1** to **AC-7**
+3. [x] Zero Dawn's own `.zd/risk.json` and `.github/workflows/zd-gate.yml` (gate run from the checkout itself here), satisfies **AC-10**, **AC-12**
+4. [x] Installer: link `~/.local/bin/zd-gate`, unlink on `--uninstall`, satisfies **AC-13**
+5. [x] `/sync` step 3.5 and `global/RULES.md` trailer rule (only after an explicit yes, engineer's name), keeping `npm run check` budgets under 90%, satisfies **AC-8**
+6. [x] Remaining defaults (`auth`, `billing`, `prod-db`) and `zd-gate init` (risk file, pinned CI workflow, required check with skip reasons), satisfies **AC-9**, **AC-10**
+7. [x] `/audit` enrollment calls `zd-gate init`, satisfies **AC-11**
 8. Pilot: run `init` on Triquetra Design System and merge one real PR through it, satisfies **AC-8**, **AC-9**, **AC-10**
 
 ## Consequences
@@ -196,6 +130,7 @@ Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then
 - A local trailer can be forged by anyone with commit access; the required CI check is the real lock, and it is unavailable on some private repos on the free plan.
 - Content patterns catch common formats only; an unusual secret can slip through.
 - CI pins a SHA, so gate fixes reach CI only when a project's workflow is bumped.
+- A new path exception (for a false positive) takes effect only after it merges, so it ships in its own approved PR before the branch it unblocks.
 - Squash merges collapse trailers into the merge commit body; history on main keeps them only as text.
 
 **Neutral**:
@@ -208,3 +143,7 @@ Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then
 - [ ] A `zd-gate init --bump` path to update the pinned SHA in a project's workflow.
 - [ ] Revisit the change size axis (scope feature 14) once the gate reports which areas real PRs touch.
 - [ ] Nightly security loop (scope feature 13) can call `zd-gate <sha from 24 hours ago>` once this ships.
+
+## Rationale
+
+Decision record (context, options, reasoning): [rationale.md](rationale.md). Verify steps: [verify.md](verify.md).

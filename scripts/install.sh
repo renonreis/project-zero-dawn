@@ -5,6 +5,7 @@
 # Idempotent. Never overwrites a real file or folder; only manages its own symlinks.
 #   scripts/install.sh              install / refresh
 #   scripts/install.sh --uninstall  remove everything this script created
+# Also links the risk gate (scripts/zd-gate.mjs) as ~/.local/bin/zd-gate (spec 0003).
 set -euo pipefail
 
 ZD="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -14,6 +15,7 @@ AGENT_TARGET="$CLAUDE_DIR/agents"
 GLOBAL_MD="$CLAUDE_DIR/CLAUDE.md"
 START="<!-- zero-dawn:start (managed by $ZD/scripts/install.sh) -->"
 END="<!-- zero-dawn:end -->"
+BIN_LINK="$HOME/.local/bin/zd-gate"
 RULES_LINKS=("${COPILOT_HOME:-$HOME/.copilot}/copilot-instructions.md" "$HOME/.gemini/GEMINI.md")
 MODE="${1:-install}"
 
@@ -52,6 +54,7 @@ if [ "$MODE" = "--uninstall" ]; then
   for r in "${RULES_LINKS[@]}"; do
     [ -L "$r" ] && [ "$(readlink "$r")" = "$ZD/global/RULES.md" ] && rm "$r" && echo "  removed $r"
   done
+  [ -L "$BIN_LINK" ] && [ "$(readlink "$BIN_LINK")" = "$ZD/scripts/zd-gate.mjs" ] && rm "$BIN_LINK" && echo "  removed $BIN_LINK"
   exit 0
 fi
 
@@ -73,4 +76,6 @@ touch "$GLOBAL_MD"; strip_block
 } >> "$GLOBAL_MD"
 echo "rules → imported from $GLOBAL_MD"
 for r in "${RULES_LINKS[@]}"; do mkdir -p "$(dirname "$r")"; link "$ZD/global/RULES.md" "$r"; done
+mkdir -p "$(dirname "$BIN_LINK")"; echo "risk gate → $BIN_LINK"; link "$ZD/scripts/zd-gate.mjs" "$BIN_LINK"
+case ":$PATH:" in *":$(dirname "$BIN_LINK"):"*) ;; *) echo "  NOTE $(dirname "$BIN_LINK") is not on your PATH";; esac
 echo "Done. Restart your agent sessions to pick up new skills."

@@ -4,9 +4,13 @@
   "version": "0.1.0",
   "description": "Core agentic engineering workflow: method, skills and portfolio registry.",
   "type": "module",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "check": "node scripts/check-portability.mjs",
-    "tokens": "node scripts/analyze-token-usage.mjs"
+    "tokens": "node scripts/analyze-token-usage.mjs",
+    "test": "node --test scripts/zd-gate.test.mjs",
+    "gate": "node scripts/zd-gate.mjs"
   }
 }
