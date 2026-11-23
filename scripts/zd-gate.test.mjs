@@ -252,6 +252,7 @@ test("AC-10: the CI workflow pins the gate, fetches full history, and runs Node 
   assert.match(y, /fetch-depth: 0/);
   assert.match(y, /repository: owner\/zd\n\s+ref: abc1234def/);
   assert.match(y, /node-version: 24/);
+  assert.doesNotMatch(y, /@v4/, "actions run on Node 24 runtimes");
   assert.match(y, /^  zd-gate:$/m);
   const self = workflowYaml({ selfHosted: true });
   assert.match(self, /git show "origin\/\$BASE:scripts\/zd-gate\.mjs"/, "Zero Dawn runs the base branch's gate");
@@ -302,5 +303,21 @@ test("AC-9: init --no-protect skips the required check and says so", async () =>
     const r = spawnSync(process.execPath, [GATE, "init", "--no-protect"], { cwd: t.dir, encoding: "utf8" });
     assert.equal(r.status, 0, r.stderr);
     assert.match(r.stdout, /Skipped the required check \(--no-protect\)/);
+  } finally { t.cleanup(); }
+});
+
+test("AC-9: init formats its files with the project's Prettier when installed", async () => {
+  const { init } = await import("./zd-gate.mjs");
+  const { readFileSync, chmodSync } = await import("node:fs");
+  const t = repo();
+  try {
+    // A stand in Prettier that records its arguments.
+    t.write("node_modules/.bin/prettier", "#!/bin/sh\necho \"$@\" > prettier-args.txt\n");
+    chmodSync(path.join(t.dir, "node_modules/.bin/prettier"), 0o755);
+    t.write(".github/workflows/zd-gate.yml", "# existing\n");
+    const logs = [];
+    init(t.dir, { protect: false, log: (l) => logs.push(l) });
+    assert.match(readFileSync(path.join(t.dir, "prettier-args.txt"), "utf8"), /--write .*\.zd\/risk\.json/);
+    assert.ok(logs.some((l) => l.startsWith("Formatted the written files")));
   } finally { t.cleanup(); }
 });
