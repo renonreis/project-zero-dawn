@@ -22,7 +22,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 8 | Plugin or marketplace distribution | Deferred | planned |
 | 9 | GAIA persona and agent naming | Slice 1 | in-progress |
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
-| 11 | Risk gate | Slice 2 | in-progress |
+| 11 | Risk gate | Slice 2 | done |
 | 12 | Evidence based setup pruning | Slice 2 | planned |
 | 13 | Scheduled loops (nightly security, weekly retro) | Slice 2 | planned |
 | 14 | Change size axis | Deferred | planned |
@@ -89,7 +89,7 @@ Naming layer only: the main session is GAIA and each skill runs as one of her ni
 
 Adopted 2026-11-21. Already applied: evidence claims and `Not tested` / `Needs your OK` report sections, three round review cap (A10), goal, effort, done when briefings.
 
-### 11. Risk gate · in-progress
+### 11. Risk gate · done
 A deterministic, non AI gate that checks every commit of a branch against a risk file: secrets block with no override; workflow rules, auth, billing, and migrations need a recorded engineer OK. Runs in `/sync` before merge under `autonomy: full`, plus a required GitHub Actions check. Spec: [0003](../specs/0003-risk-gate/index.md). Code in `scripts/zd-gate.mjs`.
 **Done when:** a spec records the design, the gate ships in Zero Dawn, and one pilot project runs it before a real merge.
 - [x] Design it (spec)
@@ -98,7 +98,7 @@ A deterministic, non AI gate that checks every commit of a branch against a risk
   - [x] Zero Dawn wiring: own risk file, CI workflow, installer link, `/sync` step and trailer rule (AC-8, AC-10, AC-12, AC-13)
   - [x] `zd-gate init` with remaining defaults and ruleset, `/audit` enrollment (AC-9, AC-11)
   - [x] Pilot run on Triquetra Design System (AC-8 to AC-10): enrolled without a required check (release bot PRs), triquetra-design-system#80
-- [ ] Verify it: /check verify risk gate
+- [x] Verify it: /check verify risk gate (2026-11-23: all exercised steps passed; skipped by the engineer: CI job summary check and AC-11 `/audit` enrollment, confirm on the next enrollment)
 - [x] Test it: /test risk gate
 
 ### 12. Evidence based setup pruning · planned

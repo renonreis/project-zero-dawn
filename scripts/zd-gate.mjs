@@ -384,7 +384,7 @@ function zeroDawnRoot() {
 }
 
 export function workflowYaml({ selfHosted, repo, sha }) {
-  const fetchGate = selfHosted ? "" : `      - uses: actions/checkout@v4
+  const fetchGate = selfHosted ? "" : `      - uses: actions/checkout@v5
         with:
           repository: ${repo}
           ref: ${sha}
@@ -415,14 +415,22 @@ jobs:
   zd-gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: \${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-${fetchGate}      - uses: actions/setup-node@v4
+${fetchGate}      - uses: actions/setup-node@v5
         with:
           node-version: 24
 ${runGate}`;
+}
+
+/** Projects that lint with Prettier would fail CI on our JSON style, so use their own Prettier when it is installed. */
+function formatWithProjectPrettier(top, files, log) {
+  const bin = path.join(top, "node_modules", ".bin", "prettier");
+  if (!existsSync(bin)) return;
+  const r = spawnSync(bin, ["--write", ...files], { cwd: top, encoding: "utf8" });
+  log(r.status === 0 ? "Formatted the written files with this project's Prettier." : `Could not run this project's Prettier (${(r.stderr || "").trim().split("\n")[0]}); run it yourself before committing.`);
 }
 
 function ensureRuleset(cwd, log) {
@@ -478,6 +486,7 @@ export function init(cwd, { forceCi = false, protect = true, log = console.log }
     writeFileSync(wf, workflowYaml({ selfHosted, repo, sha }));
     log(`Wrote .github/workflows/zd-gate.yml${selfHosted ? " (runs the gate from this checkout)" : ` (gate pinned to ${repo}@${sha.slice(0, 7)})`}.`);
   }
+  formatWithProjectPrettier(top, [riskFile, wf], log);
   if (protect) ensureRuleset(top, log);
   else log("Skipped the required check (--no-protect): the zd-gate check reports on PRs but does not block merges.");
 }
