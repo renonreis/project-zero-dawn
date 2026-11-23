@@ -4,7 +4,7 @@
 // (or built in defaults). Not an AI: it only reads git and prints.
 //
 //   zd-gate [base] [--json] [--risk <path>]   check the current branch
-//   zd-gate init [--force-ci]                 enroll this repo
+//   zd-gate init [--force-ci] [--no-protect]  enroll this repo
 //
 // Exit: 0 clear · 1 needs an approval · 2 blocked · 3 error.
 
@@ -479,6 +479,7 @@ export function init(cwd, { forceCi = false, protect = true, log = console.log }
     log(`Wrote .github/workflows/zd-gate.yml${selfHosted ? " (runs the gate from this checkout)" : ` (gate pinned to ${repo}@${sha.slice(0, 7)})`}.`);
   }
   if (protect) ensureRuleset(top, log);
+  else log("Skipped the required check (--no-protect): the zd-gate check reports on PRs but does not block merges.");
 }
 
 // ---------- CLI ----------
@@ -487,11 +488,11 @@ function main(argv) {
   const json = argv.includes("--json");
   try {
     if (argv[0] === "init") {
-      init(process.cwd(), { forceCi: argv.includes("--force-ci") });
+      init(process.cwd(), { forceCi: argv.includes("--force-ci"), protect: !argv.includes("--no-protect") });
       return 0;
     }
     if (argv.includes("--help") || argv.includes("-h")) {
-      console.log("zd-gate [base] [--json] [--risk <path>]  check this branch\nzd-gate init [--force-ci]                enroll this repo");
+      console.log("zd-gate [base] [--json] [--risk <path>]  check this branch\nzd-gate init [--force-ci] [--no-protect] enroll this repo (--no-protect: report only, no required check)");
       return 0;
     }
     const iRisk = argv.indexOf("--risk");

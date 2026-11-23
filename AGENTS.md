@@ -11,11 +11,14 @@ The engineer's core agentic engineering workflow: the method (docs), the workflo
 - `docs/portfolio/registry.md`: one row per managed project.
 - `docs/scope/`, `docs/specs/`: Zero Dawn's own scope and decisions (this repo runs its own workflow).
 - `upstream/`: pristine upstream docs and license, kept for diffing.
-- `scripts/`: `install.sh` (symlinks skills and agents, wires global rules), `check-portability.mjs` (skill conventions and size budgets), `upstream-diff.sh`.
+- `scripts/`: `install.sh` (symlinks skills and agents, wires global rules, links `zd-gate`), `check-portability.mjs` (skill conventions and size budgets), `upstream-diff.sh`, `zd-gate.mjs` (the risk gate, spec 0003).
+- `.zd/risk.json`: Zero Dawn's own risk areas for `zd-gate` (guards `global/`, `scripts/`, `.zd/`, `.github/`, root `AGENTS.md`/`CLAUDE.md`; not `skills/`).
 
 ## Commands
 
 - `npm run check`: run before committing any change under `skills/`. Must pass; a hot path over 90% means prune, not raise the budget.
+- `npm test`: the `zd-gate` suite (`node:test`, Node 22+, git 2.36+). Run before committing any change under `scripts/`.
+- `zd-gate` (or `npm run gate`): checks this branch against the base's `.zd/risk.json`; exit 0 clear, 1 needs a `Risk-approved` trailer after the engineer's yes, 2 blocked, 3 error. CI requires it on `main`.
 - `scripts/install.sh` / `scripts/install.sh --uninstall`: idempotent; safe to rerun after adding a skill.
 - `scripts/upstream-diff.sh`: compare our skills with the latest upstream before porting changes.
 
