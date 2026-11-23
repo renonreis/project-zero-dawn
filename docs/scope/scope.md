@@ -99,7 +99,7 @@ A deterministic, non AI gate that checks every commit of a branch against a risk
   - [x] `zd-gate init` with remaining defaults and ruleset, `/audit` enrollment (AC-9, AC-11)
   - [x] Pilot run on Triquetra Design System (AC-8 to AC-10): enrolled without a required check (release bot PRs), triquetra-design-system#80
 - [ ] Verify it: /check verify risk gate
-- [ ] Test it: /test risk gate
+- [x] Test it: /test risk gate
 
 ### 12. Evidence based setup pruning · planned
 On every major model jump, remove the setup, run 2 or 3 real tasks bare, and restore only what was missed, one rule at a time. Safety rules and permissions never leave. Complements the byte budgets in `npm run check`.
