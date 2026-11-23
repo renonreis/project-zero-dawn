@@ -1,7 +1,7 @@
 # 0003. Risk gate: a deterministic merge check for guarded areas
 
 **Date**: 2026-11-21
-**Status**: In Progress
+**Status**: Accepted
 **Scope**: feature 11
 
 ## Summary
