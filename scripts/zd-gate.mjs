@@ -179,22 +179,42 @@ export function gitUserName(cwd) {
   return git(["config", "user.name"], cwd, { allowFail: true }).trim();
 }
 
-/** Load .zd/risk.json, or the built in defaults with a warning (AC-6). */
-export function loadConfig(cwd, riskPath) {
-  const p = path.resolve(cwd, riskPath ?? RISK_FILE);
-  if (existsSync(p)) {
-    let raw;
-    try {
-      raw = JSON.parse(readFileSync(p, "utf8"));
-    } catch (e) {
-      throw new GateError(`${riskPath ?? RISK_FILE} is not valid JSON: ${e.message}`);
-    }
-    return { config: compileConfig(raw), warnings: [] };
+function parseRisk(text, label) {
+  try {
+    return compileConfig(JSON.parse(text));
+  } catch (e) {
+    if (e instanceof GateError) throw new GateError(`${label}: ${e.message}`);
+    throw new GateError(`${label} is not valid JSON: ${e.message}`);
   }
-  if (riskPath) throw new GateError(`risk file not found: ${riskPath}`);
+}
+
+/**
+ * Load the rules the branch is judged by. Trusted source first: the base ref's
+ * copy, so a branch cannot loosen the rules that judge it. Then this branch's copy
+ * (first enrollment only), then the built in defaults (AC-6).
+ */
+export function loadConfig(cwd, riskPath, base) {
+  if (riskPath) {
+    const p = path.resolve(cwd, riskPath);
+    if (!existsSync(p)) throw new GateError(`risk file not found: ${riskPath}`);
+    return { config: parseRisk(readFileSync(p, "utf8"), riskPath), source: riskPath, warnings: [] };
+  }
+  if (base) {
+    const shown = run("git", ["show", `${base}:${RISK_FILE}`], cwd, { allowFail: true });
+    if (shown.status === 0) return { config: parseRisk(shown.stdout, `${base}:${RISK_FILE}`), source: `${base}:${RISK_FILE}`, warnings: [] };
+  }
+  const p = path.resolve(cwd, RISK_FILE);
+  if (existsSync(p)) {
+    return {
+      config: parseRisk(readFileSync(p, "utf8"), RISK_FILE),
+      source: RISK_FILE,
+      warnings: [`${RISK_FILE} is not on ${base ?? "the base"} yet, so this branch's copy applies (first enrollment).`],
+    };
+  }
   const name = gitUserName(cwd) || "the engineer";
   return {
     config: compileConfig({ version: 1, approvers: [name], areas: BUILT_IN_AREAS }),
+    source: "built in defaults",
     warnings: [`No ${RISK_FILE} here, so the built in defaults (secrets, workflow) apply. Run "zd-gate init" to enroll this project.`],
   };
 }
@@ -238,8 +258,8 @@ function resolveBase(cwd, baseArg) {
 /** Run the gate. Returns the result object; never writes. */
 export function check(cwd, { base: baseArg, riskPath } = {}) {
   checkRuntime(cwd);
-  const { config, warnings } = loadConfig(cwd, riskPath);
   const base = resolveBase(cwd, baseArg);
+  const { config, source, warnings } = loadConfig(cwd, riskPath, base);
   const mb = run("git", ["merge-base", base, "HEAD"], cwd, { allowFail: true });
   if (mb.status !== 0) {
     const shallow = git(["rev-parse", "--is-shallow-repository"], cwd).trim() === "true";
@@ -311,7 +331,7 @@ export function check(cwd, { base: baseArg, riskPath } = {}) {
     });
   }
   const code = areas.some((a) => a.state === "blocked") ? 2 : areas.some((a) => a.state === "needs-ok") ? 1 : 0;
-  return { base, commits: commits.length, areas, warnings, code };
+  return { base, rules: source, commits: commits.length, areas, warnings, code };
 }
 
 export function approvalCommand(area) {
@@ -320,7 +340,7 @@ export function approvalCommand(area) {
 }
 
 export function formatReport(r) {
-  const out = [`zd-gate · ${r.commits} commit(s) since ${r.base}`, ""];
+  const out = [`zd-gate · ${r.commits} commit(s) since ${r.base} · rules from ${r.rules}`, ""];
   if (r.commits === 0) out.push("No new commits. Nothing to check.", "");
   else if (r.areas.length === 0) out.push("Nothing guarded was touched.", "");
   for (const a of r.areas) {
@@ -370,7 +390,21 @@ export function workflowYaml({ selfHosted, repo, sha }) {
           ref: ${sha}
           path: .zd-gate
 `;
-  const script = selfHosted ? "scripts/zd-gate.mjs" : ".zd-gate/scripts/zd-gate.mjs";
+  // Zero Dawn judges a PR with the base branch's gate, never the PR's own copy.
+  const runGate = selfHosted
+    ? `      - name: zd-gate (base branch copy)
+        env:
+          BASE: \${{ github.base_ref }}
+        run: |
+          if git cat-file -e "origin/$BASE:scripts/zd-gate.mjs" 2>/dev/null; then
+            git show "origin/$BASE:scripts/zd-gate.mjs" > "$RUNNER_TEMP/zd-gate.mjs"
+          else
+            cp scripts/zd-gate.mjs "$RUNNER_TEMP/zd-gate.mjs"
+          fi
+          node "$RUNNER_TEMP/zd-gate.mjs" "origin/$BASE"
+`
+    : `      - run: node .zd-gate/scripts/zd-gate.mjs "origin/\${{ github.base_ref }}"
+`;
   return `# Managed by zd-gate init (Zero Dawn spec 0003). Changes here are guarded by the workflow area.
 name: zd-gate
 on:
@@ -388,8 +422,7 @@ jobs:
 ${fetchGate}      - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: node ${script} "origin/\${{ github.base_ref }}"
-`;
+${runGate}`;
 }
 
 function ensureRuleset(cwd, log) {

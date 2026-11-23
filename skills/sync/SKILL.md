@@ -123,7 +123,8 @@ The inputs to apply:
 ### 3.5 Portfolio registry and merge
 
 - If your global agent rules name a portfolio registry, update this project's row there (status, current feature, tier, date) with a surgical edit and commit it in that repo; skip silently if none.
-- `autonomy: full` in the `## Git` block, an open PR, and the effective tier's checks passed (CI green, if any): merge it (`gh pr merge --squash --delete-branch`) and say so. Else recommend the merge. Never deploy.
+- Before any merge, run the risk gate (`zd-gate` from the repo root; skip only if the command is missing, and say so). Exit `0`: go on. Exit `1`: ask the engineer per listed area; only after an explicit yes for that area, run the approval command it printed with the approver matching `git config user.name` (none matches: ask which name), push, and run the gate again. Exit `2` or `3`: stop, never merge, relay its report.
+- `autonomy: full` in the `## Git` block, an open PR, the gate at `0`, and the effective tier's checks passed (CI green, if any): merge it (`gh pr merge --squash --delete-branch`) and say so. Else recommend the merge. Never deploy.
 
 ### 4. Relay the result
 

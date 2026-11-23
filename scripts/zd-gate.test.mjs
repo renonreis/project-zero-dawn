@@ -149,7 +149,7 @@ test("AC-6: a project risk file replaces the defaults, and its edits are guarded
     t.commit("rules", { "global/RULES.md": "x\n" });
     const r = check(t.dir, { base: "main" });
     assert.equal(r.code, 1);
-    assert.equal(r.warnings.length, 0);
+    assert.match(r.warnings[0], /first enrollment/);
     assert.deepEqual(area(r, "workflow").findings.map((f) => f.file), ["global/RULES.md", ".zd/risk.json"], "a new touch reopens the area and lists every touch");
   } finally { t.cleanup(); }
 });
@@ -253,5 +253,25 @@ test("AC-10: the CI workflow pins the gate, fetches full history, and runs Node 
   assert.match(y, /repository: owner\/zd\n\s+ref: abc1234def/);
   assert.match(y, /node-version: 24/);
   assert.match(y, /^  zd-gate:$/m);
-  assert.match(workflowYaml({ selfHosted: true }), /run: node scripts\/zd-gate\.mjs/);
+  const self = workflowYaml({ selfHosted: true });
+  assert.match(self, /git show "origin\/\$BASE:scripts\/zd-gate\.mjs"/, "Zero Dawn runs the base branch's gate");
+});
+
+test("a branch cannot loosen the rules that judge it: the base copy of the risk file wins", () => {
+  const t = repo();
+  try {
+    const rules = (areas) => JSON.stringify({ version: 1, approvers: ["Ada Tester"], areas });
+    const guard = { id: "workflow", name: "Rules", why: "w", onTouch: "approve", paths: [".zd/", "global/"] };
+    t.g("switch", "-q", "main");
+    t.commit("enroll", { ".zd/risk.json": rules([guard]) });
+    t.g("switch", "-q", "-c", "sneaky");
+    t.commit("loosen", {
+      ".zd/risk.json": rules([{ id: "other", name: "O", why: "w", onTouch: "approve", paths: ["nothing/"] }]),
+      "global/RULES.md": "weaker\n",
+    });
+    const r = check(t.dir, { base: "main" });
+    assert.equal(r.rules, "main:.zd/risk.json");
+    assert.equal(r.code, 1);
+    assert.deepEqual(area(r, "workflow").findings.map((f) => f.file).sort(), [".zd/risk.json", "global/RULES.md"]);
+  } finally { t.cleanup(); }
 });

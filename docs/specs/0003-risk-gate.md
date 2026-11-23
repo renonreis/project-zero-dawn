@@ -29,7 +29,7 @@ Constraints: the engineer works alone (no second human reviewer exists, so GitHu
 - **AC-3**: A commit touching an `approve` area with no valid approval makes `zd-gate` exit `1`, listing the area, the files, who may approve, and the exact approval command.
 - **AC-4**: A trailer `Risk-approved: <area id> (<name>)` counts only when `<name>` matches an approver of that area (case insensitive) and the trailer sits in the latest commit that touched the area or a later one. With every touched area approved and nothing blocked, `zd-gate` exits `0`.
 - **AC-5**: A path listed in an area's `except` never triggers that area, for path rules and content rules alike.
-- **AC-6**: With no `.zd/risk.json`, the built in defaults (secrets, workflow) apply and a warning recommends `zd-gate init`. An invalid risk file, a missing base ref, a non git folder, a shallow clone without the merge base, a git older than 2.36, or a Node without glob support makes `zd-gate` exit `3` with a plain message.
+- **AC-6**: The rules come from the base ref's `.zd/risk.json` when the base has one, so a branch cannot loosen the rules that judge it; the branch's own copy applies only when the base has none (first enrollment, with a warning). With no `.zd/risk.json` anywhere, the built in defaults (secrets, workflow) apply and a warning recommends `zd-gate init`. An invalid risk file, a missing base ref, a non git folder, a shallow clone without the merge base, a git older than 2.36, or a Node without glob support makes `zd-gate` exit `3` with a plain message.
 - **AC-7**: `zd-gate --json` prints the same result as JSON with the same exit code.
 - **AC-8**: `/sync` runs `zd-gate` before any merge. Exit `0`: merge as today. Exit `1`: stop, ask the engineer per area; after an explicit yes, write the trailer commit with the engineer's name, push, run the gate again, then merge. Exit `2`: stop, never merge, show the fix. Exit `3`: stop, never merge, show the error.
 - **AC-9**: `zd-gate init` writes `.zd/risk.json` (default areas, approver from `git config user.name`) and `.github/workflows/zd-gate.yml`, never overwriting an existing file. On a repo the engineer owns whose plan supports it, it sets the `zd-gate` check as required on the default branch; otherwise it says why it skipped.
@@ -142,7 +142,7 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 | `zd-gate` | commit range | `git merge-base <base> HEAD` to `HEAD` |
 | `zd-gate` | files and added lines per commit | `git log --no-renames --name-only` and `git log -p --unified=0 --no-renames --diff-merges=remerge` over the range (merge commits show only what their conflict resolution added; needs git 2.36 or newer, else exit `3`) |
 | `zd-gate` | "still in final tree" | added lines of `git diff <merge-base>...HEAD` |
-| `zd-gate` | areas and approvers | `.zd/risk.json` (or `--risk`), else built in defaults |
+| `zd-gate` | areas and approvers | `--risk` if given; else `git show <base>:.zd/risk.json`; else the working tree `.zd/risk.json` (first enrollment, warned); else built in defaults |
 | `zd-gate` | approvals | `Risk-approved` trailers in commit bodies of the range |
 | `/sync` | the engineer's yes | the engineer's explicit answer in this conversation, per area; never inferred |
 | `/sync` | trailer name | the area approver equal (case insensitive) to `git config user.name`; if none matches, the engineer names one in the same question that asks for the OK |
@@ -158,7 +158,7 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 - `/sync` never merges on any exit other than `0`.
 - `init` never overwrites an existing risk file.
 
-**Security model**: the gate reads the local repo only; no network except `init` calling `gh`. Trailers are a record, not a cryptographic lock: locally, anyone who can commit can write one; the required CI check plus the guarded risk file and `RULES.md` bound that. Checking the trailer commit's author email was considered and rejected (agents commit under the engineer's identity, so it proves nothing), as was requiring a GitHub PR approval (a solo engineer cannot approve their own PR); instead the CI job summary lists every trailer approval so the engineer can spot one they never gave. Agents write a trailer only after the engineer's explicit yes in the current conversation, naming the engineer, never themselves. On a repo owned by someone else (or `autonomy: confirm`), `init` writes files only after asking and never changes branch protection. Secret findings print file and line, never the matched value.
+**Security model**: the gate reads the local repo only; no network except `init` calling `gh`. Trailers are a record, not a cryptographic lock: locally, anyone who can commit can write one; the required CI check plus the guarded risk file and `RULES.md` bound that. Checking the trailer commit's author email was considered and rejected (agents commit under the engineer's identity, so it proves nothing), as was requiring a GitHub PR approval (a solo engineer cannot approve their own PR); instead the CI job summary lists every trailer approval so the engineer can spot one they never gave. A branch is always judged by the base ref's rules, and in Zero Dawn CI by the base ref's copy of the gate script, so a PR cannot weaken the gate or drop an area to pass itself. Agents write a trailer only after the engineer's explicit yes in the current conversation, naming the engineer, never themselves. On a repo owned by someone else (or `autonomy: confirm`), `init` writes files only after asking and never changes branch protection. Secret findings print file and line, never the matched value.
 
 **Configuration required**: none (no env vars). CI needs read access to the public Zero Dawn repo.
 
@@ -177,9 +177,9 @@ Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then
 
 1. [x] `scripts/zd-gate.mjs`: argument parsing, Node and repo checks, base resolution, per commit file and added line extraction, built in `secrets` and `workflow` defaults, area evaluation, trailer parsing, text and JSON output, exit codes, satisfies **AC-1**, **AC-2**, **AC-3**, **AC-4**, **AC-5**, **AC-6**, **AC-7**
 2. [x] Tests with `node:test` that build throwaway git repos in a temp dir for each scenario above; `npm test` script, satisfies **AC-1** to **AC-7**
-3. Zero Dawn's own `.zd/risk.json` and `.github/workflows/zd-gate.yml` (gate run from the checkout itself here), satisfies **AC-10**, **AC-12**
-4. Installer: link `~/.local/bin/zd-gate`, unlink on `--uninstall`, satisfies **AC-13**
-5. `/sync` step 3.5 and `global/RULES.md` trailer rule (only after an explicit yes, engineer's name), keeping `npm run check` budgets under 90%, satisfies **AC-8**
+3. [x] Zero Dawn's own `.zd/risk.json` and `.github/workflows/zd-gate.yml` (gate run from the checkout itself here), satisfies **AC-10**, **AC-12**
+4. [x] Installer: link `~/.local/bin/zd-gate`, unlink on `--uninstall`, satisfies **AC-13**
+5. [x] `/sync` step 3.5 and `global/RULES.md` trailer rule (only after an explicit yes, engineer's name), keeping `npm run check` budgets under 90%, satisfies **AC-8**
 6. Remaining defaults (`auth`, `billing`, `prod-db`) and `zd-gate init` (risk file, pinned CI workflow, required check with skip reasons), satisfies **AC-9**, **AC-10**
 7. `/audit` enrollment calls `zd-gate init`, satisfies **AC-11**
 8. Pilot: run `init` on Triquetra Design System and merge one real PR through it, satisfies **AC-8**, **AC-9**, **AC-10**
@@ -196,6 +196,7 @@ Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then
 - A local trailer can be forged by anyone with commit access; the required CI check is the real lock, and it is unavailable on some private repos on the free plan.
 - Content patterns catch common formats only; an unusual secret can slip through.
 - CI pins a SHA, so gate fixes reach CI only when a project's workflow is bumped.
+- A new path exception (for a false positive) takes effect only after it merges, so it ships in its own approved PR before the branch it unblocks.
 - Squash merges collapse trailers into the merge commit body; history on main keeps them only as text.
 
 **Neutral**:

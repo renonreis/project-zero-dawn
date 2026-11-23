@@ -1,0 +1,27 @@
+# Managed by zd-gate init (Zero Dawn spec 0003). Changes here are guarded by the workflow area.
+name: zd-gate
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  zd-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: zd-gate (base branch copy)
+        env:
+          BASE: ${{ github.base_ref }}
+        run: |
+          if git cat-file -e "origin/$BASE:scripts/zd-gate.mjs" 2>/dev/null; then
+            git show "origin/$BASE:scripts/zd-gate.mjs" > "$RUNNER_TEMP/zd-gate.mjs"
+          else
+            cp scripts/zd-gate.mjs "$RUNNER_TEMP/zd-gate.mjs"
+          fi
+          node "$RUNNER_TEMP/zd-gate.mjs" "origin/$BASE"
