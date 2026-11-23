@@ -90,7 +90,7 @@ Naming layer only: the main session is GAIA and each skill runs as one of her ni
 Adopted 2026-11-21. Already applied: evidence claims and `Not tested` / `Needs your OK` report sections, three round review cap (A10), goal, effort, done when briefings.
 
 ### 11. Risk gate · in-progress
-A deterministic, non AI gate that checks every commit of a branch against a risk file: secrets block with no override; workflow rules, auth, billing, and migrations need a recorded engineer OK. Runs in `/sync` before merge under `autonomy: full`, plus a required GitHub Actions check. Spec: [0003](../specs/0003-risk-gate.md). Code in `scripts/zd-gate.mjs`.
+A deterministic, non AI gate that checks every commit of a branch against a risk file: secrets block with no override; workflow rules, auth, billing, and migrations need a recorded engineer OK. Runs in `/sync` before merge under `autonomy: full`, plus a required GitHub Actions check. Spec: [0003](../specs/0003-risk-gate/index.md). Code in `scripts/zd-gate.mjs`.
 **Done when:** a spec records the design, the gate ships in Zero Dawn, and one pilot project runs it before a real merge.
 - [x] Design it (spec)
 - [ ] Build it: /develop risk gate
