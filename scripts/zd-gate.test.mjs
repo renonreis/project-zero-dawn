@@ -294,3 +294,13 @@ test("AC-9: init writes the risk file with the git user as approver and never ov
     assert.ok(logs.some((l) => l.startsWith("Kept .zd/risk.json")));
   } finally { t.cleanup(); }
 });
+
+test("AC-9: init --no-protect skips the required check and says so", async () => {
+  const t = repo();
+  try {
+    t.write(".github/workflows/zd-gate.yml", "# existing\n");
+    const r = spawnSync(process.execPath, [GATE, "init", "--no-protect"], { cwd: t.dir, encoding: "utf8" });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(r.stdout, /Skipped the required check \(--no-protect\)/);
+  } finally { t.cleanup(); }
+});

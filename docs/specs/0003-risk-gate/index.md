@@ -24,7 +24,7 @@ Zero Dawn ships a small Node script, `zd-gate`, that reads every commit of a bra
 - **AC-6**: The rules come from the base ref's `.zd/risk.json` when the base has one, so a branch cannot loosen the rules that judge it; the branch's own copy applies only when the base has none (first enrollment, with a warning). With no `.zd/risk.json` anywhere, the built in defaults (secrets, workflow) apply and a warning recommends `zd-gate init`. An invalid risk file, a missing base ref, a non git folder, a shallow clone without the merge base, a git older than 2.36, or a Node without glob support makes `zd-gate` exit `3` with a plain message.
 - **AC-7**: `zd-gate --json` prints the same result as JSON with the same exit code.
 - **AC-8**: `/sync` runs `zd-gate` before any merge. Exit `0`: merge as today. Exit `1`: stop, ask the engineer per area; after an explicit yes, write the trailer commit with the engineer's name, push, run the gate again, then merge. Exit `2`: stop, never merge, show the fix. Exit `3`: stop, never merge, show the error.
-- **AC-9**: `zd-gate init` writes `.zd/risk.json` (default areas, approver from `git config user.name`) and `.github/workflows/zd-gate.yml`, never overwriting an existing file. On a repo the engineer owns whose plan supports it, it sets the `zd-gate` check as required on the default branch; otherwise it says why it skipped.
+- **AC-9**: `zd-gate init` writes `.zd/risk.json` (default areas, approver from `git config user.name`) and `.github/workflows/zd-gate.yml`, never overwriting an existing file. On a repo the engineer owns whose plan supports it, it sets the `zd-gate` check as required on the default branch; otherwise, or with `--no-protect`, it says why it skipped.
 - **AC-10**: The CI workflow (job named `zd-gate`) runs the gate from Zero Dawn pinned to a commit SHA on every pull request, with `actions/checkout` at `fetch-depth: 0` and `actions/setup-node` on Node 24, fails the check on any exit other than `0`, and lists in the job summary every area that passed by trailer (area, name, commit).
 - **AC-11**: `/audit` runs `zd-gate init` when it enrolls a project (under `autonomy: confirm`, it asks first).
 - **AC-12**: Zero Dawn's own risk file guards `global/`, `scripts/`, `.zd/`, `.github/`, `AGENTS.md`, and `CLAUDE.md`, and does not guard `skills/`.
@@ -66,7 +66,7 @@ Finding record: `{commit (short sha), file, line?, rule, stillInFinalTree?}`. Pa
 |---|---|---|---|---|
 | `zd-gate [base]` | base ref (opt), `--risk <path>` (opt) | report text; exit `0/1/2/3` | local git | exit `3`: not a repo, base missing, shallow clone, bad risk file, Node < 22 |
 | `zd-gate --json [base]` | same | JSON `{base, commits, areas[{id, state, findings[], approvers, approvedBy?}], warnings[], code}` | local git | same |
-| `zd-gate init` | `--force-ci` (opt, rewrites only the workflow) | writes `.zd/risk.json`, `.github/workflows/zd-gate.yml`; may set required check | `gh` auth for protection | file exists (skips that file, says so); protection unsupported (skips, says why) |
+| `zd-gate init` | `--force-ci` (opt, rewrites only the workflow), `--no-protect` (opt, report only: no ruleset) | writes `.zd/risk.json`, `.github/workflows/zd-gate.yml`; may set required check | `gh` auth for protection | file exists (skips that file, says so); protection unsupported (skips, says why) |
 | `/sync` step 3.5 | gate exit code | merge, ask, or stop | engineer's yes for trailers | exit `2`/`3` never merge |
 
 **Value sourcing**:
@@ -131,6 +131,7 @@ Tracer Bullet: prove the whole loop on Zero Dawn first (gate, `/sync`, CI), then
 - Content patterns catch common formats only; an unusual secret can slip through.
 - CI pins a SHA, so gate fixes reach CI only when a project's workflow is bumped.
 - A new path exception (for a false positive) takes effect only after it merges, so it ships in its own approved PR before the branch it unblocks.
+- Repos whose PRs are opened by the Actions bot (release bots using the default token) never get the check, so a required check would block them; enroll those with `--no-protect` until their bot uses a token that triggers checks.
 - Squash merges collapse trailers into the merge commit body; history on main keeps them only as text.
 
 **Neutral**:
