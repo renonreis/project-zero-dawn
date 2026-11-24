@@ -60,4 +60,4 @@ Claude Code 2.1.325, Haiku 5.5, throwaway repo, 2026-11-24:
 | Cloud tools (`Artifact`, `RemoteTrigger`, `Cron*`) with user settings off | listed by `init`; gone once denied in `sandbox.json` |
 | Triquetra typecheck, lint, and Vitest inside the sandbox | pass after an outside install |
 
-Amended 2026-11-24 during `/develop` with the engineer's yes: scoped `Edit` and `Write` flags and the cloud tool denies. Not probed: full runs on Opus or Sonnet.
+Amended 2026-11-24 during `/develop` with the engineer's yes: scoped `Edit` and `Write` flags and the cloud tool denies; and AC-6 freezes inputs per task, which matches the build plan. Not probed: full runs on Opus or Sonnet.
