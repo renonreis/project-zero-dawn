@@ -5,7 +5,8 @@
 - `protected-core.md`: approved by the engineer on 2026-11-24.
 - `sandbox.json`: per spec 0004 *Isolation contract*, plus denies for cloud and session tools (an Opus 5.5 or Haiku 5.5 session lists them even with user settings off).
 - `$TMPDIR` inside the sandbox is the shared `/tmp/claude-501`, so the transcript audit also looks for reads there.
-- Not frozen yet: T1 and T3 inputs (build plan step 4).
+- T1 (`t1/`): two turns in one process; `briefing.md` after the arm's first line, then `briefing-turn2.md` after the first `result` event.
+- T3 (`t3/`): base tree committed on `main`, then the `bece77b` tree with `defects.patch` applied (`patch -p1`) on `feat/risk-gate`. Same five paths in both.
 
 ## Arm rules file
 
