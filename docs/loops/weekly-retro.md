@@ -1,6 +1,6 @@
 # Weekly retro
 
-Goal: show the engineer what the workflow caught since the last retro, and propose at most 3 adjustments the evidence supports. Spec: `docs/specs/0005-scheduled-loops.md`.
+Goal: show the engineer what the workflow caught since the last retro, and propose at most 3 adjustments the evidence supports. Spec: `docs/specs/0005-scheduled-loops/index.md`.
 
 ## Rules
 

@@ -8,20 +8,6 @@
 
 Two routines run on a schedule and only report. The nightly one reads what reached the default branch of live projects and looks for security problems. The weekly one (a retro, a short look back) counts what the gate stopped, failed verifies, and review blockers across the registry, then proposes at most 3 adjustments. A small script gathers the facts first, so the model reads little and quota use stays low. The nightly schedule is created only when a project goes live.
 
-## Context
-
-Work merges autonomously, so nobody looks at the sum of a day of merges, and nothing tells the engineer whether the workflow's own checks earn their cost.
-
-Evidence measured on 2026-11-24:
-
-| Source | What exists | Gap |
-|---|---|---|
-| `zd-gate` | Failed and successful runs in GitHub Actions (Zero Dawn: 5 failed, 3 successful; failed logs name the missing approval); `Risk-approved` trailers on `main` | Log retention is 90 days; a stop in `/sync` before a push leaves no record outside session transcripts |
-| `/check verify` | Verdict in the chat reply only | Spec 0002 escalates on "two consecutive failing reports in `docs/reviews/`", which the skill never writes |
-| `/check review` | `docs/reviews/<date>-<branch>.md` is written, but only Central Administrativa has committed files, on open PR branches | Elsewhere the files vanish with the worktree; two rounds on one day share a name |
-
-`schedule_task` has no model or runtime input, while T3 stores both per task. Whether it copies them from the creating thread is unverified. T3 has no scheduled task today. No registry project is marked `shipped`; `renon.dev` is paused but has a production deploy, and Triquetra publishes releases. Some repos are public, so a vulnerability cannot be posted there. One is private and belongs to someone else.
-
 ## Requirements
 
 **User stories**:
@@ -49,43 +35,9 @@ Evidence measured on 2026-11-24:
 - **AC-17**: The task prompt only points to `docs/loops/<loop>.md` on `origin/main` of Zero Dawn; prompt and collector run from a temporary clone of `main`, never from a working checkout.
 - **AC-18**: A finished run records state only after its report file is saved. A run that stops early through an error records nothing.
 
-## Options considered
-
-### Option 1: Prompt only loops
-
-**Pros**:
-- No code to maintain.
-
-**Cons**:
-- The model spends tokens on lookups and can silently miss a source or a window.
-
-### Option 2: Deterministic collector plus short prompts
-
-A script gathers facts as JSON; the model judges and writes.
-
-**Pros**:
-- Small token cost; windows, caps, and missing evidence are testable.
-
-**Cons**:
-- One more script in a guarded folder, and the verify skill diverges from upstream.
-
-### Option 3: `zd-gate` keeps a log, transcripts fill the rest
-
-**Pros**:
-- Sees local stops too.
-
-**Cons**:
-- Breaks the rule of spec 0003 that the gate only reads and prints; transcripts are noisy, private, and tied to one machine.
-
 ## Decision
 
 **Chosen option**: Option 2. T3 scheduled tasks start each loop, `scripts/loop-collect.mjs` (no dependencies) gathers evidence, and `docs/loops/*.md` hold the prompts.
-
-## Rationale
-
-GitHub Actions already records the gate stops that reach a PR, so a log inside the gate would break a clear rule to gain only local stops. Verify and review do need a durable record: saving it fixes the retro and the escalation rule in spec 0002 with one change. The engineer chose to specify the nightly loop now and turn it on later, because nothing is marked live.
-
-Claude writes the code, so a Gemini nightly review is independent and costs no Claude Pro quota. The retro is synthesis, weekly, and small. Reference from local session logs: two `/sync` runs on Sonnet 5.5 used about 4 to 5 thousand output tokens and 0.5 million cache reads each, against 28 to 186 thousand output tokens for `/architect` on Opus 5.5. A retro of the `/sync` size is an expectation, not a measurement; the first run is compared with it. T3 threads keep findings private. Detection by fingerprint was preferred to a read only token, which still leaves SSH push open.
 
 ## Feature design
 
@@ -192,3 +144,7 @@ Feature 13 stays `in-progress` until step 8 produced a report, or the engineer c
 - [ ] Amend the routing table in spec 0002 with both loops when they are built.
 - [ ] Compare the first retro's token use with the `/sync` reference; move it to Antigravity if it is far above.
 - [ ] Decide whether `renon.dev` (paused, production deploy) or Triquetra (publishes releases) should be `Live`; until then no row qualifies.
+
+## Rationale
+
+Decision record (context, options, reasoning): [rationale.md](rationale.md). Verify steps: [verify.md](verify.md).

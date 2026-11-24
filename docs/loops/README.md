@@ -1,6 +1,6 @@
 # Scheduled loops
 
-Prompts for the scheduled loops (spec [0005](../specs/0005-scheduled-loops.md)). Both only report. The T3 task holds nothing but this prompt, with `<loop>` replaced:
+Prompts for the scheduled loops (spec [0005](../specs/0005-scheduled-loops/index.md)). Both only report. The T3 task holds nothing but this prompt, with `<loop>` replaced:
 
 ```text
 You are GAIA running the scheduled loop <loop>. Note the current folder. Make a temporary folder with mktemp -d, then run git clone --depth 1 --branch main https://github.com/renonreis/project-zero-dawn.git <temporary folder>/zd. Read <temporary folder>/zd/docs/loops/<loop>.md and follow it exactly. If the clone fails, report that line and stop. Report only: change nothing else. Reply to the engineer in PT-BR.

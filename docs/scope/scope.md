@@ -114,7 +114,7 @@ On every major model jump, remove the setup, run 2 or 3 real tasks bare, and res
 - [ ] Test it: /test evidence based setup pruning
 
 ### 13. Scheduled loops · in-progress
-Nightly security review of what merged in the last 24 hours (report only) for projects in production, and a weekly Zero Dawn retro over the registry (what the gate blocked, failed verifies, review blockers) proposing at most 3 adjustments. Spec: [0005](../specs/0005-scheduled-loops.md). Code in `scripts/loop-collect.mjs`, prompts in `docs/loops/`.
+Nightly security review of what merged in the last 24 hours (report only) for projects in production, and a weekly Zero Dawn retro over the registry (what the gate blocked, failed verifies, review blockers) proposing at most 3 adjustments. Spec: [0005](../specs/0005-scheduled-loops/index.md). Code in `scripts/loop-collect.mjs`, prompts in `docs/loops/`.
 **Done when:** both run as scheduled tasks and produced one report each.
 - [x] Design it (spec)
 - [ ] Build it: /develop scheduled loops

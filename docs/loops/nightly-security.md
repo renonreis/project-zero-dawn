@@ -1,6 +1,6 @@
 # Nightly security review
 
-Goal: find security problems in what reached the default branch of live projects since the last run. Spec: `docs/specs/0005-scheduled-loops.md`.
+Goal: find security problems in what reached the default branch of live projects since the last run. Spec: `docs/specs/0005-scheduled-loops/index.md`.
 
 ## Rules
 
