@@ -107,7 +107,7 @@ On every major model jump, remove the setup, run 2 or 3 real tasks bare, and res
 - [x] Design it (spec)
 - [ ] Build it: /develop evidence based setup pruning
   - [x] Document the ritual in doc 09 (AC-1, AC-2)
-  - [ ] First run on Opus 5.5: protected core, inputs, and T2 tracer (AC-3 to AC-6)
+  - [x] First run on Opus 5.5: protected core, inputs, and T2 tracer (AC-3 to AC-6)
   - [ ] T1 and T3, misses, restores, and pruned runs (AC-7 to AC-12)
   - [ ] Gemini replay, report, and one cut PR per skill, personas included (AC-13 to AC-15)
 - [ ] Verify it: /check verify evidence based setup pruning
