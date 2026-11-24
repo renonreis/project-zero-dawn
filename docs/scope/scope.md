@@ -24,7 +24,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
 | 11 | Risk gate | Slice 2 | done |
 | 12 | Evidence based setup pruning | Slice 2 | planned |
-| 13 | Scheduled loops (nightly security, weekly retro) | Slice 2 | planned |
+| 13 | Scheduled loops (nightly security, weekly retro) | Slice 2 | in-progress |
 | 14 | Change size axis | Deferred | planned |
 
 ## Foundations
@@ -107,11 +107,18 @@ On every major model jump, remove the setup, run 2 or 3 real tasks bare, and res
 - [ ] Document the ritual
 - [ ] First run on Opus 5.5 (include persona lines inherited from upstream)
 
-### 13. Scheduled loops · planned
-Nightly security review of what merged in the last 24 hours (report only) for projects in production, and a weekly Zero Dawn retro over the registry (what the gate blocked, failed verifies, review blockers) proposing at most 3 adjustments.
+### 13. Scheduled loops · in-progress
+Nightly security review of what merged in the last 24 hours (report only) for projects in production, and a weekly Zero Dawn retro over the registry (what the gate blocked, failed verifies, review blockers) proposing at most 3 adjustments. Spec: [0004](../specs/0004-scheduled-loops.md).
 **Done when:** both run as scheduled tasks and produced one report each.
-- [ ] Nightly security loop prompt and schedule
-- [ ] Weekly retro prompt and schedule
+- [x] Design it (spec)
+- [ ] Build it: /develop scheduled loops
+  - [ ] Collector and weekly retro prompt, gate source (AC-1 to AC-3, AC-9, AC-10, AC-12, AC-15, AC-17, AC-18)
+  - [ ] Verify and review evidence: reports in `docs/reviews/`, external repo filter (AC-9, AC-11, AC-13)
+  - [ ] Weekly retro schedule, after the engineer's yes (AC-14, AC-16)
+  - [ ] Nightly windows, caps, prompt, and registry `Live` column (AC-1, AC-3 to AC-8, AC-15, AC-17)
+  - [ ] Nightly schedule, when the first project is live and after the engineer's yes (AC-14, AC-16)
+- [ ] Verify it: /check verify scheduled loops
+- [ ] Test it: /test scheduled loops
 
 ## Deferred
 
