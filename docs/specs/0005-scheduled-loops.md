@@ -1,7 +1,7 @@
 # 0005. Scheduled loops: nightly security review and weekly retro
 
 **Date**: 2026-11-24
-**Status**: Proposed
+**Status**: In Progress
 **Scope**: feature 13
 
 ## Summary
@@ -159,14 +159,14 @@ A per project failure never ends `start`: it becomes an `error` entry (nightly) 
 
 Tracer Bullet: the retro end to end on Zero Dawn first, then evidence, then the nightly.
 
-1. `scripts/loop-collect.mjs` with `start`, `check`, `finish` for the retro and the gate source, plus `node:test` tests (guarded folder: needs the engineer's approval), satisfies **AC-2**, **AC-9**, **AC-10**, **AC-18**
-2. `docs/loops/weekly-retro.md`, with one manual run, satisfies **AC-1**, **AC-3**, **AC-12**, **AC-15**, **AC-17**
-3. `/check verify` report, round suffix in `/check review`, commit in `/sync`, adaptation rows, `npm run check`, satisfies **AC-11**
-4. Verify and review sources with the external repo filter, satisfies **AC-9**, **AC-13**
-5. Retro schedule after the engineer's yes: create disabled from a thread on the routed model, confirm, enable, satisfies **AC-14**, **AC-16**
-6. Registry `Live` column (all `no`); nightly windows, caps, and `zd-gate` secrets in the collector, with tests, satisfies **AC-4**, **AC-5**, **AC-6**, **AC-7**, **AC-8**
-7. `docs/loops/nightly-security.md`, with one manual run on a test registry, satisfies **AC-1**, **AC-3**, **AC-7**, **AC-8**, **AC-15**, **AC-17**
-8. Nightly schedule when the first row qualifies, after the engineer's yes, satisfies **AC-14**, **AC-16**
+1. [x] `scripts/loop-collect.mjs` with `start`, `check`, `finish` for the retro and the gate source, plus `node:test` tests (guarded folder: needs the engineer's approval), satisfies **AC-2**, **AC-9**, **AC-10**, **AC-18**
+2. [x] `docs/loops/weekly-retro.md`, with one manual run, satisfies **AC-1**, **AC-3**, **AC-12**, **AC-15**, **AC-17**
+3. [x] `/check verify` report, round suffix in `/check review`, commit in `/sync`, adaptation rows, `npm run check`, satisfies **AC-11**
+4. [x] Verify and review sources with the external repo filter, satisfies **AC-9**, **AC-13**
+5. [ ] Retro schedule after the engineer's yes: create disabled from a thread on the routed model, confirm, enable, satisfies **AC-14**, **AC-16**
+6. [x] Registry `Live` column (all `no`); nightly windows, caps, and `zd-gate` secrets in the collector, with tests, satisfies **AC-4**, **AC-5**, **AC-6**, **AC-7**, **AC-8**
+7. [x] `docs/loops/nightly-security.md`, with one manual run on a test registry, satisfies **AC-1**, **AC-3**, **AC-7**, **AC-8**, **AC-15**, **AC-17**
+8. [ ] Nightly schedule when the first row qualifies, after the engineer's yes, satisfies **AC-14**, **AC-16**
 
 Feature 13 stays `in-progress` until step 8 produced a report, or the engineer closes it without the nightly.
 
