@@ -1,4 +1,4 @@
-# 0004. Scheduled loops: nightly security review and weekly retro
+# 0005. Scheduled loops: nightly security review and weekly retro
 
 **Date**: 2026-11-24
 **Status**: Proposed
