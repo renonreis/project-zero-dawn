@@ -40,6 +40,7 @@ git diff 42d85b8 -- skills agents
 
 | A10 | `/check review` para na terceira rodada com bloqueio aberto e devolve a decisão ao engenheiro | `check/modes/review.md` |
 | A11 | Porteiro `zd-gate` (spec 0003): `/sync` roda antes de todo merge e só grava o trailer de aprovação depois do sim do engenheiro; `/audit` chama `zd-gate init` ao registrar um projeto | `sync/SKILL.md`, `audit/SKILL.md` |
+| A12 | `/check verify` grava o veredito em `docs/reviews/<data>-verify-<feature>.md`; review e verify nunca sobrescrevem uma rodada (`-2`, `-3`); `/sync` commita esses arquivos (spec 0005) | `check/SKILL.md`, `check/modes/verify.md`, `check/modes/review.md`, `sync/SKILL.md` |
 
 Toda nova divergência entra nesta tabela.
 

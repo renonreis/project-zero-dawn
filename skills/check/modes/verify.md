@@ -14,7 +14,7 @@ Acts: scopes from git, works out the launch, runs, observes, reports. Asks only 
 
 ## Artifact ownership
 
-Owns no durable files. Chat output only (plus screenshots/logs saved to the scratch area). Does not write code (`/develop`), tests (`/test`), or context files.
+Owns one durable file per run: `docs/reviews/<YYYY-MM-DD>-verify-<feature slug>.md` (`.workflow/reviews/` when that is the artifact base), see Step 5. Screenshots and logs go to the scratch area. Does not write code (`/develop`), tests (`/test`), or context files.
 
 ---
 
@@ -165,6 +165,8 @@ The passing behaviors and their evidence are the record, not the summary; do not
 **For /check review**:
 - <anything that worked but looked fragile: slow response, console warning, missing empty state>
 ```
+
+**Save the verdict (every run, PASS, FAIL, or BLOCKED).** Write the report above to `docs/reviews/<YYYY-MM-DD>-verify-<feature slug>.md`, its first line exactly `**Verdict**: PASS`, `FAIL`, or `BLOCKED`. Name taken → add `-2`, `-3`; never overwrite. `/sync` commits it.
 
 Drop the Spec conformance / Missed surfaces / Not applied sections when there was no governing spec. Keep them but write "none" when a contract was loaded and every item is met.
 

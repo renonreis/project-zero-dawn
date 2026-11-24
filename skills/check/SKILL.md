@@ -15,7 +15,7 @@ Write everything this skill produces, files and messages alike, in plain simple 
 
 `/check` is the gate before merge. Two modes, separate jobs, usually both, verify first:
 
-- **`verify`** (runtime proof): run the real app and watch the change behave. Proves it works and conforms to the spec (every acceptance criterion met, every specced surface built), which green tests never reveal. Read only on code, no durable files, main thread. Typically after `/develop`.
+- **`verify`** (runtime proof): run the real app and watch the change behave. Proves it works and conforms to the spec (every acceptance criterion met, every specced surface built), which green tests never reveal. Read only on code, saves its verdict to `docs/reviews/`, main thread. Typically after `/develop`.
 - **`review`** (fresh model code review): a senior read of the diff on a **different model than wrote the code** (a model reviewing its own output shares its blind spots). Writes findings ranked by severity to `docs/reviews/`. Read only. Typically before a PR.
 
 Neither mode edits code. `verify` points failures at `/debug` or `/develop`; `review` reports findings to fix.

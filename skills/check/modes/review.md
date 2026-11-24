@@ -19,7 +19,7 @@ Steering: `/check review` (default contrasting model), `/check review with opus`
 
 ## Artifact ownership
 
-`docs/reviews/<YYYY-MM-DD>-<branch>.md`, created by this skill only. The subagent writes it; the main model relays a summary.
+`docs/reviews/<YYYY-MM-DD>-<branch>.md`, created by this skill only (name taken → add `-2`, `-3`; never overwrite a round). The subagent writes it; the main model relays a summary.
 
 Artifact base: findings live under `docs/` by default. If `docs/` is a published docs site (`docusaurus.config.*`, `.vitepress/`, `mkdocs.yml`, Astro Starlight, or Nextra detected), use `.workflow/` instead (`.workflow/reviews/`). Always follow whichever base, `docs/` or `.workflow/`, already exists (paths here assume `docs/`).
 
@@ -113,7 +113,7 @@ Resolve this skill's folder to an absolute path (you, the main agent, already re
   3. Project-context contents (inline), `AGENTS.md` or `CLAUDE.md` fallback, the conventions the review must enforce
   4. Recent spec paths (read if relevant), or inline the relevant spec text if your client gives subagents no file access
   5. The test signal (`configured` / `none-by-design` / `none-yet`) so it judges test adequacy correctly; never nag for tests on a `none-by-design` project
-  6. Output path for findings: `docs/reviews/<date>-<branch>.md`
+  6. Output path for findings: `docs/reviews/<date>-<branch>.md`, with the free suffix if the name is taken
 
 ### 5. Relay the result
 
@@ -136,7 +136,7 @@ For a high-stakes change (verdict was Blocked or Changes requested, or the chang
 
 **Tick the scope box (closing gate).** If the reviewed feature has a row in `docs/scope/`, tick its `Review it` box (the review ran; the box marks that, not that it passed) and confirm it in the report: "Scope: ticked `Review it`." No matching row → say so ("no scope row matched `<feature>`, tick it manually or enroll it"). This is the only scope edit review makes; it writes no code, tests, or specs.
 
-**Round cap.** Count earlier findings files for this branch in `docs/reviews/`. If this was the third round and a blocker is still open, do not offer another round: list the open blockers and hand the decision to the engineer.
+**Round cap.** Count earlier findings files for this branch in `docs/reviews/` (not the `<date>-verify-` ones). If this was the third round and a blocker is still open, do not offer another round: list the open blockers and hand the decision to the engineer.
 
 This skill is complete after relaying. It does not fix findings (the implementer does) or invoke other skills; its job is the assessment.
 

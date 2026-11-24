@@ -74,7 +74,7 @@ Remove duplicates, then **filter to source files** to sync *from*:
 - **Keep the `D` (deleted) entries** in a separate list; they drive orphan cleanup (Step 3) though they aren't synced *from*.
 - **Keep dependency manifest changes in a separate list** for tool discovery, even if they are config rather than source: `package.json`, `pyproject.toml`, `requirements*.txt`, `go.mod`, `Cargo.toml`, `composer.json`, `Gemfile`, `pubspec.yaml`, `mix.exs`, `*.csproj`, and equivalent package manifests. Lock files are signals only; do not pass lockfile contents.
 
-**If no source files and no dependency manifest changes remain** (only docs/tests/lock/generated files changed), stop, nothing to sync. Do not spawn.
+**If no source files and no dependency manifest changes remain** (only docs/tests/lock/generated files changed), do only the review files bullet of Step 3.5, then stop, nothing to sync. Do not spawn.
 
 ### 2. Locate the context files and specs (paths only, do NOT read them here)
 
@@ -123,6 +123,7 @@ The inputs to apply:
 ### 3.5 Portfolio registry and merge
 
 - If your global agent rules name a portfolio registry, update this project's row there (status, current feature, tier, date) with a surgical edit and commit it in that repo; skip silently if none.
+- Commit the uncommitted files in `docs/reviews/` (or `.workflow/reviews/`) whose name holds this branch or the feature slug, per the `## Git` block; list the others without touching them. Do this even when Step 1 found nothing to sync.
 - Before any merge, run the risk gate (`zd-gate` from the repo root; skip only if the command is missing, and say so). Exit `0`: go on. Exit `1`: ask the engineer per listed area; only after an explicit yes for that area, run the approval command it printed with the approver matching `git config user.name` (none matches: ask which name), push, and run the gate again. Exit `2` or `3`: stop, never merge, relay its report.
 - `autonomy: full` in the `## Git` block, an open PR, the gate at `0`, and the effective tier's checks passed (CI green, if any): merge it (`gh pr merge --squash --delete-branch`) and say so. Else recommend the merge. Never deploy.
 
