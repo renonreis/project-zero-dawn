@@ -23,7 +23,7 @@ _These are recommendations, not requirements. You decide when a feature is `done
 | 9 | GAIA persona and agent naming | Slice 1 | in-progress |
 | 10 | Other harnesses (Copilot, Gemini, own harness) | Deferred | planned |
 | 11 | Risk gate | Slice 2 | done |
-| 12 | Evidence based setup pruning | Slice 2 | planned |
+| 12 | Evidence based setup pruning | Slice 2 | in-progress |
 | 13 | Scheduled loops (nightly security, weekly retro) | Slice 2 | in-progress |
 | 14 | Change size axis | Deferred | planned |
 
@@ -101,11 +101,17 @@ A deterministic, non AI gate that checks every commit of a branch against a risk
 - [x] Verify it: /check verify risk gate (2026-11-23: all exercised steps passed; skipped by the engineer: CI job summary check and AC-11 `/audit` enrollment, confirm on the next enrollment; also not exercised: trailer name tie with two approvers, merge commit case through the CLI)
 - [ ] Test it: /test risk gate (`npm test` suite exists and passes; `/test` itself never ran)
 
-### 12. Evidence based setup pruning · planned
-On every major model jump, remove the setup, run 2 or 3 real tasks bare, and restore only what was missed, one rule at a time. Safety rules and permissions never leave. Complements the byte budgets in `npm run check`.
+### 12. Evidence based setup pruning · in-progress
+On every major model jump, remove the setup, run 2 or 3 real tasks bare, and restore only what was missed, one rule at a time. Safety rules and permissions never leave. Complements the byte budgets in `npm run check`. Spec: [0004](../specs/0004-setup-pruning/index.md).
 **Done when:** the ritual is documented in `docs/workflow/09-mantendo-o-core.md` and ran once on the current model.
-- [ ] Document the ritual
-- [ ] First run on Opus 5.5 (include persona lines inherited from upstream)
+- [x] Design it (spec)
+- [ ] Build it: /develop evidence based setup pruning
+  - [ ] Document the ritual in doc 09 (AC-1, AC-2)
+  - [ ] First run on Opus 5.5: protected core, inputs, and T2 tracer (AC-3 to AC-6)
+  - [ ] T1 and T3, misses, restores, and pruned runs (AC-7 to AC-12)
+  - [ ] Gemini replay, report, and one cut PR per skill, personas included (AC-13 to AC-15)
+- [ ] Verify it: /check verify evidence based setup pruning
+- [ ] Test it: /test evidence based setup pruning
 
 ### 13. Scheduled loops · in-progress
 Nightly security review of what merged in the last 24 hours (report only) for projects in production, and a weekly Zero Dawn retro over the registry (what the gate blocked, failed verifies, review blockers) proposing at most 3 adjustments. Spec: [0005](../specs/0005-scheduled-loops.md).
