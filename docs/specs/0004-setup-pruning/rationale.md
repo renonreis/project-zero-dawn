@@ -55,5 +55,9 @@ Claude Code 2.1.325, Haiku 5.5, throwaway repo, 2026-11-24:
 | Network, `allowedDomains: []`, `bypassPermissions` | reachable, so this mode is rejected |
 | Network, `allowedDomains: []`, `dontAsk` | all hosts denied |
 | Two turns through `--input-format stream-json` without persistence | context kept between turns |
+| `Write` outside the clone in `dontAsk`, `--allowedTools` with bare `Edit,Write` | written to `/private/tmp`, so AC-5 fails |
+| Same, with `Edit(/**),Write(/**)` | denied, also from a subagent; inside writes work |
+| Cloud tools (`Artifact`, `RemoteTrigger`, `Cron*`) with user settings off | listed by `init`; gone once denied in `sandbox.json` |
+| Triquetra typecheck, lint, and Vitest inside the sandbox | pass after an outside install |
 
-Not probed: full runs on Opus or Sonnet, `Edit` and `Write` in `dontAsk`, subagent events in the stream, the Triquetra test suite inside the sandbox. Build step 3 covers them.
+Amended 2026-11-24 during `/develop` with the engineer's yes: scoped `Edit` and `Write` flags and the cloud tool denies; and AC-6 freezes inputs per task, which matches the build plan. Not probed: full runs on Opus or Sonnet.

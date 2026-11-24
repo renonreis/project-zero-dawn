@@ -1,0 +1,55 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push *)",
+      "Bash(gh *)",
+      "WebFetch",
+      "WebSearch",
+      "Read(~/.claude/**)",
+      "Read(~/.agents/**)",
+      "Read(~/.gemini/**)",
+      "Read(~/.t3/**)",
+      "Read(~/.local/state/**)",
+      "Edit(//Users/**)",
+      "Artifact",
+      "ArtifactComments",
+      "ArtifactData",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "DesignSync",
+      "EnterWorktree",
+      "ExitWorktree",
+      "ListAgents",
+      "Monitor",
+      "PushNotification",
+      "RemoteTrigger",
+      "ScheduleWakeup",
+      "SendMessage"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyRead": [
+        "~/.claude",
+        "~/.agents",
+        "~/.gemini",
+        "~/.t3",
+        "~/.local/state"
+      ],
+      "denyWrite": [
+        "~/.claude",
+        "~/.agents",
+        "~/.gemini",
+        "~/.t3",
+        "~/.local/state"
+      ]
+    },
+    "network": {
+      "allowedDomains": []
+    }
+  }
+}

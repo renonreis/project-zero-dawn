@@ -53,6 +53,61 @@ scripts/upstream-diff.sh skills/scope/SKILL.md   # diff de um arquivo
 
 Porte à mão, preservando as adaptações acima; depois atualize o `PINNED` no script e o commit no `NOTICE.md`.
 
+## Ritual de poda por evidência
+
+Contrato: [spec 0004](../specs/0004-setup-pruning/index.md). O ritual responde se uma regra ainda é necessária. Ele complementa os orçamentos do `npm run check` e nunca os substitui: o check controla tamanho todo dia, o ritual controla necessidade, raramente.
+
+**Quando:** um modelo Claude autor da [spec 0002](../specs/0002-model-routing.md) muda de geração (5.5 para 6 conta; 5.5 para 5.6 não). A emenda da spec 0002 abre a tarefa no scope e você escolhe a hora. A primeira rodada é a do Opus 5.5.
+
+**O que nunca sai (em nenhum braço, nunca vira corte):**
+
+- em `global/RULES.md`: Autonomia inteira (com Hostinger e `zd-gate`), Língua, evidência com `Not tested` e `Needs your OK`, provedores permitidos;
+- tudo do `zd-gate`: `scripts/`, `.zd/`, `.github/`, passo do `/sync`, inscrição no `/audit`, regra do trailer;
+- texto de skill que pede confirmação (merge, deploy, gasto, exclusão, publicação) ou limita quem escreve e aprova;
+- permissões, denies, `allowed-tools` e o bloco `OUTPUT-STYLE`;
+- títulos, nomes de arquivo e formatos que outra skill ou checker lê.
+
+Na dúvida, a linha é protegida. O `protected-core.md` da rodada traz o texto literal, aprovado por você antes.
+
+**Braços:** `full` (setup inteiro), `bare` (só o protegido), `restore` (bare mais o que voltou), `pruned` (full menos os cortes). `AGENTS.md`, scope e specs do projeto ficam em todos.
+
+### Isolamento
+
+Nunca mexa em `~/.claude`, `~/.agents`, `~/.gemini` ou no checkout principal. Grave os alvos dos links e os hashes do setup instalado antes e depois.
+
+1. Clone em `mktemp -d` novo, sem `AGENTS.md` nem `CLAUDE.md` em pastas acima. Use `git archive` do commit base e um commit raiz novo, sem remote. Nunca worktree.
+2. Copie as skills e agents do braço, a partir do commit do setup, para `.claude/` do clone, listado em `.git/info/exclude`. Instale dependências fora do sandbox.
+3. Preflight em sessão separada (Haiku): modelo, `apiKeySource: none`, skills e agents esperados, zero MCP, rede negada, leitura de `~/.claude` negada, escrita fora do clone negada por `Bash` e por `Write`.
+4. Rode:
+
+```bash
+env -u CLAUDECODE -u CLAUDE_CODE_SESSION_ID CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 \
+  claude -p --model <id> --effort high \
+  --setting-sources project --strict-mcp-config \
+  --settings <inputs>/sandbox.json --append-system-prompt-file <regras do braço> \
+  --permission-mode dontAsk --allowedTools "Bash,Read,Edit(/**),Write(/**),Glob,Grep,Skill,Agent" \
+  --input-format stream-json --output-format stream-json --verbose --no-session-persistence
+```
+
+5. Procure na transcrição leituras fora do clone e o gabarito. Guarde diff, artefato e transcrição em `~/.local/state/zd-pruning/<data>-<modelo>/` (só você apaga).
+
+Rodada que falha no preflight, lê o que não devia, troca de modelo ou bate na cota é **nula**: refaz, registra, conta no limite e não é julgada. Se uma flag mudar na CLI, pare e emende a spec.
+
+### Passos
+
+1. Escolha 2 ou 3 tarefas já mergeadas (ao menos uma spec e um build, nunca de projeto de outro dono). Congele em git briefings, gabarito, `protected-core.md` e `sandbox.json`. Mudar depois anula as rodadas que usaram.
+2. Rode cada tarefa uma vez em `full` e uma em `bare`.
+3. Checks objetivos primeiro. Depois o Gemini compara A e B às cegas, item a item do gabarito, citando evidência.
+4. **Miss:** item que o `full` cumpre e o `bare` não, ou dano que só o `bare` fez. Repita uma vez em `bare`. Só vale se aparecer nas duas, com evidência e com o seu sim. Estilo e `unsure` não contam.
+5. Para cada miss, liste os trechos suspeitos em ordem (você confirma) e restaure um por vez, rodando a tarefa a cada um. Fica só o que fez o miss sumir.
+6. Corte candidato é trecho não protegido, exercitado no `full` e não restaurado. O que não foi exercitado fica como `no evidence`. Personas são avaliadas trecho a trecho.
+7. Rode as tarefas com o setup podado. Regressão em uma tarefa devolve todos os cortes que ela exercitou.
+8. Texto que o Gemini lê (`/check review`) só sai depois do replay no Gemini.
+
+**Limite:** 24 rodadas Claude, nulas inclusas, com 3 reservadas para o passo 7. O que não se resolveu fica no setup. Cota estourada espera; nunca troca de modelo.
+
+**Como os cortes entram:** você aprova a tabela de trechos; um PR por skill (personas em commit separado, primeiro), depois `global/RULES.md` e `agents/`. Cada PR passa `npm run check` e `zd-gate` e entra na tabela de adaptações acima, para o port do upstream não trazer o texto de volta. O relatório fica em `docs/reviews/`.
+
 ## Editando ou criando skills
 
 - Siga [`upstream/conventions.md`](../../upstream/conventions.md): cada linha precisa mudar o comportamento; instrua, não justifique; conteúdo raro e longo vai para arquivo de referência lido sob demanda.

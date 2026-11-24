@@ -422,6 +422,7 @@ jobs:
 ${fetchGate}      - uses: actions/setup-node@v5
         with:
           node-version: 24
+          package-manager-cache: false
 ${runGate}`;
 }
 

@@ -1,7 +1,7 @@
 # 0004. Evidence based setup pruning
 
 **Date**: 2026-11-24
-**Status**: Proposed
+**Status**: In Progress
 **Scope**: feature 12
 
 ## Summary
@@ -21,7 +21,7 @@ When a routed Claude authoring model moves to a new generation, Zero Dawn replay
 - **AC-3**: Everything on the protected list is present in every arm, and no arm, cut, or restore step edits it.
 - **AC-4**: No step writes to `~/.claude`, `~/.agents`, `~/.gemini`, or the main checkout. The first run records symlink targets and file hashes of the installed setup before and after. Any difference is explained in the report (another thread may have merged) and is never made by the ritual.
 - **AC-5**: Every run uses the isolation contract and passes the preflight checks. A run that fails preflight, reads another arm's setup or the answer key, changes model, or hits a quota error is void: it is rerun, named in the report, and never judged.
-- **AC-6**: Before the first run, the briefings, answer sheet, answer key checklists, planted defects, protected core, and setup commit are committed to the run's inputs folder. Changing one afterwards voids every run that used it.
+- **AC-6**: `protected-core.md`, `sandbox.json`, and the setup commit are committed to the run's inputs folder before the first run. Each task's briefings, answer key checklist, and (where it has them) answer sheet or planted defects are committed before that task's first run. Changing one afterwards voids every run that used it.
 - **AC-7**: The first run uses the three replays in *Tasks*, on the models named there, once per arm (6 runs).
 - **AC-8**: A candidate miss is repeated once bare. It is a miss only when it appears in both bare runs, not in the full run, cites evidence, and the engineer says yes.
 - **AC-9**: For each confirmed miss, rules return one at a time, most likely first. Each addition is followed by one rerun of that task, and a rule stays only if the miss disappears. Rules already restored remain in place for later reruns of that task.
@@ -91,11 +91,11 @@ env -u CLAUDECODE -u CLAUDE_CODE_SESSION_ID CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 \
   claude -p --model <id> --effort high \
   --setting-sources project --strict-mcp-config \
   --settings <inputs>/sandbox.json --append-system-prompt-file <arm rules> \
-  --permission-mode dontAsk --allowedTools "Bash,Read,Edit,Write,Glob,Grep,Skill,Agent" \
+  --permission-mode dontAsk --allowedTools "Bash,Read,Edit(/**),Write(/**),Glob,Grep,Skill,Agent" \
   --input-format stream-json --output-format stream-json --verbose --no-session-persistence
 ```
 
-4. **`sandbox.json`**: sandbox enabled, `failIfUnavailable: true`, `allowUnsandboxedCommands: false`; `denyRead` on `~/.claude`, `~/.agents`, `~/.gemini`, `~/.t3`, and `~/.local/state`; `denyWrite` on the same; `allowedDomains: []`; permission deny on `git push`, `gh`, `WebFetch`, `WebSearch`, and the same read paths.
+4. **`sandbox.json`**: sandbox enabled, `failIfUnavailable: true`, `allowUnsandboxedCommands: false`; `denyRead` on `~/.claude`, `~/.agents`, `~/.gemini`, `~/.t3`, and `~/.local/state`; `denyWrite` on the same; `allowedDomains: []`; permission deny on `git push`, `gh`, `WebFetch`, `WebSearch`, the same read paths, `Edit` under `/Users`, and the cloud and session tools (`Artifact*`, `Cron*`, `RemoteTrigger`, `DesignSync`, `PushNotification`, `SendMessage`, and the rest of the frozen file's list).
 5. **Preflight**, read from the stream's `init` event plus a short probe in its own separate session on the same clone and settings, finished before the task starts (so the task transcript stays clean): routed model, `apiKeySource: none` (plan quota, no money), expected skills and agents only, zero MCP servers, no user plugins, GitHub and npm unreachable, a read of `~/.claude` denied, a write outside the clone denied.
    The probe runs on Haiku; the routed model is confirmed by the task's own `init` event.
 6. **Afterwards**: search the transcript for reads outside the clone and for answer key paths; save the diff, artifact, and transcript.
@@ -165,8 +165,8 @@ The Gemini check for AC-13, run only if review cuts survive AC-11:
 
 Tracer Bullet: prove one task through the whole loop, then thicken.
 
-1. [ ] Write the ritual in doc 09 (PT-BR), satisfies **AC-1**, **AC-2**
-2. [ ] Write `protected-core.md` and `sandbox.json`, engineer approves; prepare T2 inputs, satisfies **AC-3**, **AC-6**
+1. [x] Write the ritual in doc 09 (PT-BR), satisfies **AC-1**, **AC-2**
+2. [x] Write `protected-core.md` and `sandbox.json`, engineer approves; prepare T2 inputs, satisfies **AC-3**, **AC-6**
 3. [ ] Run T2 in `full` and `bare` through preflight and blind judging; fix the procedure (not the inputs) if a step fails, satisfies **AC-4**, **AC-5**
 4. [ ] Freeze T1 and T3 inputs and run their two arms, satisfies **AC-6**, **AC-7**
 5. [ ] Repeat candidates, engineer decides misses, restore one at a time, satisfies **AC-8**, **AC-9**
