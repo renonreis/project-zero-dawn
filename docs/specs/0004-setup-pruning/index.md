@@ -167,7 +167,7 @@ Tracer Bullet: prove one task through the whole loop, then thicken.
 
 1. [x] Write the ritual in doc 09 (PT-BR), satisfies **AC-1**, **AC-2**
 2. [x] Write `protected-core.md` and `sandbox.json`, engineer approves; prepare T2 inputs, satisfies **AC-3**, **AC-6**
-3. [ ] Run T2 in `full` and `bare` through preflight and blind judging; fix the procedure (not the inputs) if a step fails, satisfies **AC-4**, **AC-5**
+3. [x] Run T2 in `full` and `bare` through preflight and blind judging; fix the procedure (not the inputs) if a step fails, satisfies **AC-4**, **AC-5**
 4. [ ] Freeze T1 and T3 inputs and run their two arms, satisfies **AC-6**, **AC-7**
 5. [ ] Repeat candidates, engineer decides misses, restore one at a time, satisfies **AC-8**, **AC-9**
 6. [ ] Unit table (personas first) and the pruned runs, satisfies **AC-10**, **AC-11**, **AC-12**
