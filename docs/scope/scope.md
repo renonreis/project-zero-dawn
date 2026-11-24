@@ -98,8 +98,8 @@ A deterministic, non AI gate that checks every commit of a branch against a risk
   - [x] Zero Dawn wiring: own risk file, CI workflow, installer link, `/sync` step and trailer rule (AC-8, AC-10, AC-12, AC-13)
   - [x] `zd-gate init` with remaining defaults and ruleset, `/audit` enrollment (AC-9, AC-11)
   - [x] Pilot run on Triquetra Design System (AC-8 to AC-10): enrolled without a required check (release bot PRs), triquetra-design-system#80
-- [x] Verify it: /check verify risk gate (2026-11-23: all exercised steps passed; skipped by the engineer: CI job summary check and AC-11 `/audit` enrollment, confirm on the next enrollment)
-- [x] Test it: /test risk gate
+- [x] Verify it: /check verify risk gate (2026-11-23: all exercised steps passed; skipped by the engineer: CI job summary check and AC-11 `/audit` enrollment, confirm on the next enrollment; also not exercised: trailer name tie with two approvers, merge commit case through the CLI)
+- [ ] Test it: /test risk gate (`npm test` suite exists and passes; `/test` itself never ran)
 
 ### 12. Evidence based setup pruning · planned
 On every major model jump, remove the setup, run 2 or 3 real tasks bare, and restore only what was missed, one rule at a time. Safety rules and permissions never leave. Complements the byte budgets in `npm run check`.
