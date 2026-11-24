@@ -252,6 +252,7 @@ test("AC-10: the CI workflow pins the gate, fetches full history, and runs Node 
   assert.match(y, /fetch-depth: 0/);
   assert.match(y, /repository: owner\/zd\n\s+ref: abc1234def/);
   assert.match(y, /node-version: 24/);
+  assert.match(y, /package-manager-cache: false/);
   assert.doesNotMatch(y, /@v4/, "actions run on Node 24 runtimes");
   assert.match(y, /^  zd-gate:$/m);
   const self = workflowYaml({ selfHosted: true });
