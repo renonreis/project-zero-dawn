@@ -1,7 +1,7 @@
 # 0004. Evidence based setup pruning
 
 **Date**: 2026-11-24
-**Status**: Proposed
+**Status**: In Progress
 **Scope**: feature 12
 
 ## Summary
@@ -91,11 +91,11 @@ env -u CLAUDECODE -u CLAUDE_CODE_SESSION_ID CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 \
   claude -p --model <id> --effort high \
   --setting-sources project --strict-mcp-config \
   --settings <inputs>/sandbox.json --append-system-prompt-file <arm rules> \
-  --permission-mode dontAsk --allowedTools "Bash,Read,Edit,Write,Glob,Grep,Skill,Agent" \
+  --permission-mode dontAsk --allowedTools "Bash,Read,Edit(/**),Write(/**),Glob,Grep,Skill,Agent" \
   --input-format stream-json --output-format stream-json --verbose --no-session-persistence
 ```
 
-4. **`sandbox.json`**: sandbox enabled, `failIfUnavailable: true`, `allowUnsandboxedCommands: false`; `denyRead` on `~/.claude`, `~/.agents`, `~/.gemini`, `~/.t3`, and `~/.local/state`; `denyWrite` on the same; `allowedDomains: []`; permission deny on `git push`, `gh`, `WebFetch`, `WebSearch`, and the same read paths.
+4. **`sandbox.json`**: sandbox enabled, `failIfUnavailable: true`, `allowUnsandboxedCommands: false`; `denyRead` on `~/.claude`, `~/.agents`, `~/.gemini`, `~/.t3`, and `~/.local/state`; `denyWrite` on the same; `allowedDomains: []`; permission deny on `git push`, `gh`, `WebFetch`, `WebSearch`, the same read paths, `Edit` under `/Users`, and the cloud and session tools (`Artifact*`, `Cron*`, `RemoteTrigger`, `DesignSync`, `PushNotification`, `SendMessage`, and the rest of the frozen file's list).
 5. **Preflight**, read from the stream's `init` event plus a short probe in its own separate session on the same clone and settings, finished before the task starts (so the task transcript stays clean): routed model, `apiKeySource: none` (plan quota, no money), expected skills and agents only, zero MCP servers, no user plugins, GitHub and npm unreachable, a read of `~/.claude` denied, a write outside the clone denied.
    The probe runs on Haiku; the routed model is confirmed by the task's own `init` event.
 6. **Afterwards**: search the transcript for reads outside the clone and for answer key paths; save the diff, artifact, and transcript.
@@ -165,8 +165,8 @@ The Gemini check for AC-13, run only if review cuts survive AC-11:
 
 Tracer Bullet: prove one task through the whole loop, then thicken.
 
-1. [ ] Write the ritual in doc 09 (PT-BR), satisfies **AC-1**, **AC-2**
-2. [ ] Write `protected-core.md` and `sandbox.json`, engineer approves; prepare T2 inputs, satisfies **AC-3**, **AC-6**
+1. [x] Write the ritual in doc 09 (PT-BR), satisfies **AC-1**, **AC-2**
+2. [x] Write `protected-core.md` and `sandbox.json`, engineer approves; prepare T2 inputs, satisfies **AC-3**, **AC-6**
 3. [ ] Run T2 in `full` and `bare` through preflight and blind judging; fix the procedure (not the inputs) if a step fails, satisfies **AC-4**, **AC-5**
 4. [ ] Freeze T1 and T3 inputs and run their two arms, satisfies **AC-6**, **AC-7**
 5. [ ] Repeat candidates, engineer decides misses, restore one at a time, satisfies **AC-8**, **AC-9**
